@@ -1,0 +1,278 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="utf-8">
+    <title>JSDoc: Source: addcontact.js</title>
+
+    <script src="scripts/prettify/prettify.js"> </script>
+    <script src="scripts/prettify/lang-css.js"> </script>
+    <!--[if lt IE 9]>
+      <script src="//html5shiv.googlecode.com/svn/trunk/html5.js"></script>
+    <![endif]-->
+    <link type="text/css" rel="stylesheet" href="styles/prettify-tomorrow.css">
+    <link type="text/css" rel="stylesheet" href="styles/jsdoc-default.css">
+</head>
+
+<body>
+
+<div id="main">
+
+    <h1 class="page-title">Source: addcontact.js</h1>
+
+    
+
+
+
+    
+    <section>
+        <article>
+            <pre class="prettyprint source linenums"><code>/**
+ * Displays the contact form in the specified mode (e.g., 'add' or 'edit').
+ * Renders the form template, sets up the form state, and updates the UI accordingly.
+ * 
+ * @async
+ * @param {string} mode - The mode in which to show the contact form ('add', 'edit', etc.).
+ * @returns {Promise&lt;void>} Resolves when the form is shown and initialized.
+ */
+async function showContactForm(mode) {
+  const bg = document.getElementById("manipulateContactBackground");
+  bg.innerHTML = contactDetailsTemp(mode);
+
+  if (!checkLocalUser(mode)) return;
+  const frame = document.getElementById("addContactFrame");
+
+  frame.dataset.mode = mode;
+
+  bg.classList.replace("visibleNone", "showManipualteFormBackground");
+  frame.classList.replace("visibleNone", "showManipualteFormFrame");
+
+  contactFormBtn(mode);
+  checkMode();
+}
+
+
+/**
+ * Checks the current mode (add or edit) of the contact form.
+ * If the mode is "edit", populates the input fields with the existing contact's details
+ * (name, email, and phone) from the contact details elements.
+ *
+ * Assumes the following element IDs exist in the DOM:
+ * - "addContactFrame" with a `data-mode` attribute ("edit" or other)
+ * - "nameInput", "emailInput", "phoneInput" for input fields
+ * - "contactDetailsName", "contactDetailsMail", "contactDetailsPhone" for displaying contact details
+ */
+function checkMode() {
+  const mode = document.getElementById("addContactFrame").dataset.mode;
+  if (mode === "edit") {
+    document.getElementById("nameInput").value =
+      document.getElementById("contactDetailsName").innerText;
+    document.getElementById("emailInput").value =
+      document.getElementById("contactDetailsMail").innerText;
+    document.getElementById("phoneInput").value = document.getElementById(
+      "contactDetailsPhone"
+    ).innerText;
+  }
+}
+
+
+/**
+ * Checks if the current local user is authorized based on the provided mode.
+ * For "edit" mode, verifies if the stored token matches the expected token.
+ * If not authorized, triggers an error deletion and returns false.
+ *
+ * @param {string} mode - The operation mode, e.g., "edit".
+ * @returns {boolean} True if the user is authorized, false otherwise.
+ */
+function checkLocalUser(mode) {
+  const myToken = localStorage.getItem("token");
+  if (mode === "edit" &amp;&amp; thisToken !== myToken) {
+    deleteError("editIcon", 18, 30);
+    return false;
+  }
+  return true;
+}
+
+
+/**
+ * Hides the contact form and its background overlay by replacing their visible classes with a hidden class,
+ * and hides the delete error message if it is displayed.
+ */
+function hideContactForm() {
+  document
+    .getElementById("manipulateContactBackground")
+    .classList.replace("showManipualteFormBackground", "visibleNone");
+  document
+    .getElementById("addContactFrame")
+    .classList.replace("showManipualteFormFrame", "visibleNone");
+  document.getElementById("deleteError").classList.add("hide");
+}
+
+
+/**
+ * Updates the contact form action buttons based on the specified mode.
+ *
+ * @param {string} mode - The mode of the contact form. 
+ *   If "edit", sets buttons for editing (Delete/Save).
+ *   Otherwise, sets buttons for adding a new contact (Cancel/Create contact).
+ */
+function contactFormBtn(mode) {
+  const leftBtn = document.getElementById("leftBtn");
+  const rightBtn = document.getElementById("rightBtn");
+
+  if (mode === "edit") {
+    leftBtn.innerHTML = `Delete&lt;img id="leftBtnImg" src="../images/canceldarkblue.svg" class="marginLeft10"/>`;
+    leftBtn.onclick = () => contactForm("delete", "edit");
+
+    rightBtn.innerHTML = `Save&lt;img src="../images/check.svg" class="marginLeft10"/>`;
+    rightBtn.onclick = () => contactForm("save", "edit");
+  } else {
+    leftBtn.innerHTML = `Cancel&lt;img id="leftBtnImg" src="../images/canceldarkblue.svg" class="marginLeft10"/>`;
+    leftBtn.onclick = () => hideContactForm("add");
+
+    rightBtn.innerHTML = `Create contact&lt;img src="../images/check.svg" class="marginLeft10"/>`;
+    rightBtn.onclick = () => contactForm("add", "add");
+  }
+}
+
+
+/**
+ * Handles contact form actions such as adding, saving, or deleting a contact.
+ *
+ * @async
+ * @param {string} task - The action to perform. Can be "add", "save", or "delete".
+ * @param {string} [mode] - Optional mode parameter used when deleting a contact.
+ * @returns {Promise&lt;void>} Resolves when the action is completed and the page is reloaded if an action was performed.
+ */
+async function contactForm(task, mode) {
+  const thisEmail =
+    document.getElementById("emailInput")?.value ||
+    document.getElementById("contactDetailsMail").innerText;
+
+  let actionPerformed = false;
+
+  switch (task) {
+    case "add":
+      await addContactTask();
+      actionPerformed = true;
+      break;
+
+    case "save":
+      await saveContact(thisEmail);
+      actionPerformed = true;
+      break;
+
+    case "delete":
+      if (await deleteContact(thisEmail, mode)) {
+        actionPerformed = true;
+      }
+      break;
+  }
+
+  if (actionPerformed) {
+    localStorage.setItem("lastEditedContact", thisEmail);
+
+    hideContactForm();
+
+    window.location.reload();
+  }
+}
+
+/**
+ * Asynchronously adds a new contact by collecting input values for name, email, and phone.
+ * If at least one of the fields is filled, it assigns a color and sends the contact data to the server.
+ *
+ * @async
+ * @function
+ * @returns {Promise&lt;void>} Resolves when the contact has been added.
+ */
+async function addContactTask() {
+  const name = document.getElementById("nameInput").value;
+  const email = document.getElementById("emailInput").value;
+  const phone = document.getElementById("phoneInput").value;
+
+  if (!name &amp;&amp; !email &amp;&amp; !phone) return;
+
+  const color = await lastColor();
+  await postData("contact", { name, email, phone, color, type: "contact" });
+}
+
+
+/**
+ * Deletes a contact associated with the given email if the user is authorized.
+ *
+ * @async
+ * @param {string} email - The email address of the contact to delete.
+ * @param {string} mode - The mode of operation, either "edit" or another value, which determines the UI element for error display.
+ * @returns {Promise&lt;void>} Resolves when the contact is deleted or an error is handled.
+ */
+async function deleteContact(email, mode) {
+  const token = await findUser(email);
+  const myToken = localStorage.getItem("token");
+  const elementId = mode === "edit" ? "leftBtn" : "deleteIcon";
+
+  if (token !== myToken) {
+    deleteError(elementId, 18, 30);
+    return;
+  }
+
+  if (ergebnisse[token].type === "login") {
+    deleteError(elementId, 18, 30);
+    return;
+  }
+  await deleteData(`contact/${token}`);
+}
+
+
+/**
+ * Saves a contact by collecting input values and sending a PATCH request.
+ * Determines the payload structure based on the user's type.
+ *
+ * @async
+ * @param {string} email - The email address used to find the user token.
+ * @returns {Promise&lt;void>} Resolves when the contact is saved.
+ */
+async function saveContact(email) {
+  const name = document.getElementById("nameInput").value;
+  const phone = document.getElementById("phoneInput").value;
+  const token = await findUser(email);
+
+  const payload =
+    ergebnisse[token].type === "contact"
+      ? { name, email, phone }
+      : { name, phone };
+
+  await patchData(`${ergebnisse[token].type}/${token}`, payload);
+}
+
+
+/**
+ * Changes the source of the image element with the ID "leftBtnImg" to a new variant.
+ *
+ * @param {string} variant - The variant string to append to the image filename (e.g., 'Active', 'Inactive').
+ */
+function changeImage(variant) {
+  document.getElementById("leftBtnImg").src = `../images/cancel${variant}.svg`;
+}
+</code></pre>
+        </article>
+    </section>
+
+
+
+
+</div>
+
+<nav>
+    <h2><a href="index.html">Home</a></h2><h3>Global</h3><ul><li><a href="global.html#addContactTask">addContactTask</a></li><li><a href="global.html#changeImage">changeImage</a></li><li><a href="global.html#checkLocalUser">checkLocalUser</a></li><li><a href="global.html#checkMode">checkMode</a></li><li><a href="global.html#contactForm">contactForm</a></li><li><a href="global.html#contactFormBtn">contactFormBtn</a></li><li><a href="global.html#deleteContact">deleteContact</a></li><li><a href="global.html#hideContactForm">hideContactForm</a></li><li><a href="global.html#saveContact">saveContact</a></li><li><a href="global.html#showContactForm">showContactForm</a></li></ul>
+</nav>
+
+<br class="clear">
+
+<footer>
+    Documentation generated by <a href="https://github.com/jsdoc/jsdoc">JSDoc 4.0.4</a> on Sat May 17 2025 17:05:14 GMT+0200 (Mitteleuropäische Sommerzeit)
+</footer>
+
+<script> prettyPrint(); </script>
+<script src="scripts/linenumber.js"> </script>
+</body>
+</html>

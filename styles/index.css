@@ -1,0 +1,386 @@
+body {
+    margin: 0;
+    display: flex;
+    background: var(--background-color);
+    height: 100vh;
+    min-height: 630px;
+    justify-content: center;
+    align-items: center;
+    overflow-x: hidden;
+    overflow-y: hidden;
+}
+
+aside {
+    height: 100vh;
+    width: 200px;
+    background-color: var(--primary-color);
+    display: flex;
+    flex-direction: column;
+    justify-content: space-around;
+}
+
+main {
+    position: relative;
+    opacity: 0;
+    transition: opacity 0.5s;
+    width: 100vw;
+    height: 100vh;
+    min-height: 630px;
+    position: absolute;
+    top: 0;
+    left: 0;
+    z-index: 1;
+    background-color: var(--background-color);
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+
+header {
+    height: 90px;
+    background-color: white;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+}
+
+header span {
+    margin-left: 200px;
+}
+
+header div {
+    margin: 16px;
+    display: flex;
+    align-items: center;
+}
+
+header img:hover {
+    transform: scale(1.2);
+}
+
+#userLink {
+    border: 3px solid #2A3647;
+    border-radius: 100%;
+    padding: 10px;
+    text-decoration: none;
+    color: #29ABE2;
+    font-weight: bold;
+    margin: 16px;
+}
+
+#userLink:hover {
+    background-color: #E2E6EC;
+}
+
+#mainContent {
+    margin: 50px;
+}
+
+nav {
+    display: flex;
+    flex-direction: column;
+    text-align: center;
+}
+
+.logo {
+    position: absolute;
+    width: 80px;
+    top: 50px;
+    left: 50px;
+    height: 96px;
+    z-index: 2;
+}
+
+nav a {
+    display: flex;
+    align-items: center;
+    margin: 5px 0;
+    text-decoration: none;
+    color: #CDCDCD;
+    padding: 8px;
+    padding-left: 45px;
+    text-wrap: nowrap;
+}
+
+#legal a {
+    display: flex;
+    align-items: center;
+    margin: 5px 0;
+    text-decoration: none;
+    color: #A8A8A8;
+    /* padding: 8px; */
+    /* padding-left: 45px; */
+    text-wrap: nowrap;
+}
+
+nav a:hover {
+    background-color: #2A3D59;
+}
+
+nav img {
+    padding-right: 8px;
+}
+
+#legal {
+    position: absolute;
+    display: flex;
+    justify-content: center;
+    width: 100%;
+    bottom: 20px;
+    gap: 50px;
+}
+
+#legal a {
+    color: #A8A8A8;
+}
+
+#legal a:hover {
+    color: #29ABE2;
+    font-weight: bold;
+}
+
+.legalText {
+    font-size: 12px;
+}
+
+.active {
+    background-color: #091931 !important;
+    color: white;
+}
+
+.active:hover {
+    cursor: default;
+}
+
+.loginDiv {
+    height: 350px;
+    display: flex;
+    flex-direction: column;
+    justify-content: space-evenly;
+    align-items: center;
+    background-color: white;
+    width: fit-content;
+    border-radius: 30px;
+    padding: 20px 40px;
+    box-shadow: 00px 00px 15px rgba(0, 0, 0, 0.05);
+}
+
+.loginButtonDiv {
+    width: 100%;
+    display: flex;
+    justify-content: space-evenly;
+    flex-direction: column;
+    align-items: center;
+    gap: 10px;
+    position: relative;
+
+}
+
+.loginInput {
+    border: solid 1px #D1D1D1;
+    border-radius: 10px;
+    height: 46px;
+    border-width: 1px;
+    width: 375px;
+    font-size: 20px;
+    background-repeat: no-repeat;
+    background-position: right 20px center;
+    padding-left: 20px;
+    padding-right: 50px;
+    margin: 10px 0px;
+    outline: none;
+    cursor: pointer;
+}
+
+.loginInput::placeholder {
+    color: #D1D1D1;
+}
+
+input[type=text]:focus {
+    border-color: var(--text-underline-color);
+}
+
+input[type=password]:focus {
+    border-color: var(--text-underline-color);
+}
+
+.buttonRow {
+    display: flex;
+    gap: 16px;
+}
+
+.loginInputDiv {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    flex-direction: column;
+}
+
+.accountHeader {
+    font-size: 55px;
+    font-weight: bold;
+    text-decoration: underline 3px var(--text-underline-color);
+    text-underline-offset: 20px;
+    cursor: context-menu;
+}
+
+.blueBtn {
+    background-color: var(--primary-color);
+    color: white;
+    font-size: 21px;
+    font-weight: bold;
+    border: none;
+    border-radius: 10px;
+    height: 48px;
+    width: fit-content;
+    padding: 0px 20px;
+    cursor: pointer;
+
+}
+
+.blueBtn:hover {
+    background-color: var(--text-underline-color);
+    box-shadow: 00px 3px 10px rgba(0, 0, 0, 0.25);
+    transition: all 0.1s ease-in-out;
+}
+
+
+.whiteBtn {
+    background-color: white;
+    color: black;
+    font-size: 21px;
+    font-weight: bold;
+    border: solid 1px var(--primary-color);
+    border-radius: 10px;
+    height: 48px;
+    width: 168px;
+    text-wrap: nowrap;
+    padding: 0px 20px;
+    cursor: pointer;
+}
+
+.whiteBtn:hover {
+    box-shadow: 00px 3px 10px rgba(0, 0, 0, 0.25);
+    border-color: var(--text-underline-color);
+    color: var(--text-underline-color);
+    transition: all 0.1s ease-in-out;
+}
+
+.signUpSpan {
+    margin-right: 20px;
+    font-size: 16px;
+    cursor: context-menu;
+}
+
+#signUpDiv a {
+    background-color: var(--primary-color);
+    color: white;
+    font-size: 16px;
+    font-weight: bold;
+    border: none;
+    border-radius: 10px;
+    width: 110px;
+    text-decoration: none;
+    padding: 10px 20px;
+    text-align: center;
+}
+
+#signUpDiv a:hover {
+    background-color: var(--text-underline-color);
+    box-shadow: 00px 3px 10px rgba(0, 0, 0, 0.25);
+    transition: all 0.1s ease-in-out;
+}
+
+#signUpDiv {
+    position: absolute;
+    top: 75px;
+    right: 100px;
+}
+
+.inputDiv {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    width: fit-content;
+    padding-left: 25px;
+    margin-top: 0px;
+    margin-bottom: 0px;
+}
+
+.inputImg {
+    position: relative;
+    right: 45px;
+    margin: 0px;
+    padding: 0px;
+    cursor: pointer;
+}
+
+.redBorder {
+    border-color: red;
+}
+
+.errorSpan {
+    height: auto;
+    min-height: 14px;
+    font-size: 10px;
+    color: red;
+    /* padding-left: 95px; */
+    visibility: hidden;
+    width: calc(100% - 1 * 95px);
+}
+
+.errorSpan.visible {
+    visibility: visible;
+}
+
+.textCenter {
+    text-align: center;
+}
+
+.personImgBackground {
+    background-image: url("../images/person.svg");
+}
+
+.mailImgBackground {
+    background-image: url("../images/mail.svg");
+}
+
+.callImgBackground {
+    background-image: url("../images/call.svg");
+}
+
+.passwordImgBackground {
+    background-image: url("../images/lock.svg");
+}
+
+/* #addContactBtnDiv {
+    margin: 30px 0px;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    width: 100%;
+} */
+
+.loginSuccess {
+    left: 50%;
+    top: 100%;
+    transform: translate(-50%, 0%);
+    color: white;
+    font-size: 16px;
+    font-weight: bold;
+    background-color: var(--primary-color);
+    border-radius: 10px;
+    padding: 20px 20px;
+    text-align: center;
+}
+
+.animation {
+    transition: width 0.5s, height 0.5s, top 0.5s, left 0.5s;
+    z-index: 2;
+    /* position: absolute; */
+}
+
+.displayNone {
+    display: none;
+}

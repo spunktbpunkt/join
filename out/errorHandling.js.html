@@ -1,0 +1,197 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="utf-8">
+    <title>JSDoc: Source: errorHandling.js</title>
+
+    <script src="scripts/prettify/prettify.js"> </script>
+    <script src="scripts/prettify/lang-css.js"> </script>
+    <!--[if lt IE 9]>
+      <script src="//html5shiv.googlecode.com/svn/trunk/html5.js"></script>
+    <![endif]-->
+    <link type="text/css" rel="stylesheet" href="styles/prettify-tomorrow.css">
+    <link type="text/css" rel="stylesheet" href="styles/jsdoc-default.css">
+</head>
+
+<body>
+
+<div id="main">
+
+    <h1 class="page-title">Source: errorHandling.js</h1>
+
+    
+
+
+
+    
+    <section>
+        <article>
+            <pre class="prettyprint source linenums"><code>
+/**
+ * displays an error if required fields are not filled
+ * 
+ * @param {HTMLElement} parentElement 
+ * @param {HTMLElement} element 
+ * @param {String} elementText 
+ */
+function showError(parentElement, element, elementText) {
+    parentElement = document.getElementById(parentElement);
+    element = document.getElementById(element);
+    element.innerHTML = elementText
+    element.classList.add("visible")
+
+    try {
+        parentElement.classList.add("redBorder")
+    } catch (error) {
+    }
+
+}
+
+
+function hideError(parentElement, element) {
+    parentElement = document.getElementById(parentElement);
+    element = document.getElementById(element);
+    try { parentElement.classList.remove("redBorder") } catch (error) { }
+    try { element.classList.remove("visible") } catch (error) { }
+    try { element.innerHTML = "" } catch (error) { }
+}
+
+/**
+ * checks if the name field is filled and meets requirements
+ * 
+ * @param {String} elementId 
+ */
+function checkName(elementId) {
+    const input = document.getElementById(elementId);
+    const errorSpanId = elementId.replace("Input", "ErrorSpan");
+    const rightBtn = document.getElementById("rightBtn");
+
+    const isEmpty = input.value.trim() === "";
+    const isEmail = elementId === "emailInputContact";
+    const isEmailValid = isEmail &amp;&amp; !emailIsValid(input.value);
+
+    if (isEmpty) {
+        showError(elementId, errorSpanId,"This input field must be filled.");
+        rightBtn.disabled = true;
+        return;
+    }
+
+    if (isEmailValid) {
+        showError(elementId, errorSpanId,"Email address is not valid.");
+        rightBtn.disabled = true;
+        return;
+    }
+
+    hideError(elementId, errorSpanId);
+    rightBtn.disabled = false;
+}
+
+/**
+ * validates name field input when Enter key is pressed
+ * 
+ * @param {Event} event 
+ * @param {String} id 
+ */
+function checkEnter(event, id) {
+    if (event.key === "Enter") {
+        checkName(id);
+    }
+}
+
+function validateEmpty(inputId, errorSpanId) {
+    const input = document.getElementById(inputId);
+    if (input.value.trim() === "") {
+        showError(inputId, errorSpanId,"This input field must be filled.");
+        return false;
+    } else {
+        hideError(inputId, errorSpanId);
+        return true;
+    }
+}
+
+/**
+ * validates the input of the email inputfield
+ * 
+ * @param {String} inputId 
+ * @param {String} errorSpanId 
+ */
+function validateEmail(inputId, errorSpanId) {
+    const input = document.getElementById(inputId);
+    if (!validateEmpty(inputId, errorSpanId)) return false;
+
+    if (!emailIsValid(input.value)) {
+        showError(inputId, errorSpanId,"Email address is not valid.");
+        return false;
+    } else {
+        hideError(inputId, errorSpanId);
+        return true;
+    }
+}
+
+/**
+ * shows visual feedback if field inputs are not valid
+ * 
+ * @param {String} inputId 
+ * @param {String} errorSpanId 
+ * @param {Boolean} isEmail 
+ * @param {Event} onEnter 
+ */
+function addValidationEvents(inputId, errorSpanId, isEmail = false, onEnter = null) {
+    const input = document.getElementById(inputId);
+    if (!input) return;
+
+    input.addEventListener('blur', () => {
+        isEmail ? validateEmail(inputId, errorSpanId) : validateEmpty(inputId, errorSpanId);
+    });
+
+    input.addEventListener('keydown', (event) => {
+        if (event.key === 'Enter') {
+            const valid = isEmail ? validateEmail(inputId, errorSpanId) : validateEmpty(inputId, errorSpanId);
+            if (valid &amp;&amp; onEnter) onEnter();
+        }
+    });
+}
+
+addValidationEvents("nameInput", "nameErrorSpan");
+addValidationEvents("emailInput", "emailErrorSpan", true);
+addValidationEvents("passwordInput", "passwordErrorSpan", false, () => {
+    const blueBtn = document.querySelector('.blueBtn');
+    if (blueBtn) blueBtn.click();
+});
+addValidationEvents("confirmPasswordInput","confirmPasswordErrorSpan",false,typeof createAccount === "function" ? createAccount : null);
+
+confirmPasswordInput = document.getElementById("confirmPasswordInput");
+if (confirmPasswordInput) {
+    confirmPasswordInput.addEventListener('blur', function () {
+        showLockIconCreateAccount(this.id);
+    });
+}
+
+
+nameInput = document.getElementById('nameInput');
+emailInput = document.getElementById('emailInput');
+passwordInput = document.getElementById('passwordInput')
+confirmPasswordInput = document.getElementById('confirmPasswordInput')
+</code></pre>
+        </article>
+    </section>
+
+
+
+
+</div>
+
+<nav>
+    <h2><a href="index.html">Home</a></h2><h3>Global</h3><ul><li><a href="global.html#addValidationEvents">addValidationEvents</a></li><li><a href="global.html#checkEnter">checkEnter</a></li><li><a href="global.html#checkName">checkName</a></li><li><a href="global.html#showError">showError</a></li><li><a href="global.html#validateEmail">validateEmail</a></li></ul>
+</nav>
+
+<br class="clear">
+
+<footer>
+    Documentation generated by <a href="https://github.com/jsdoc/jsdoc">JSDoc 4.0.4</a> on Wed May 28 2025 13:54:45 GMT+0200 (Mitteleuropäische Sommerzeit)
+</footer>
+
+<script> prettyPrint(); </script>
+<script src="scripts/linenumber.js"> </script>
+</body>
+</html>

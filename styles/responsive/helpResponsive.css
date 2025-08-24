@@ -1,0 +1,27 @@
+@media (max-width: 1000px) {
+
+
+  .header-container {
+    padding-left: 50px;
+  }
+
+}
+
+@media (max-width: 800px) {
+
+  main {
+    margin-top: 80px;
+    margin-left: 0;
+    height: calc(100vh - 160px);
+  }
+
+  .help-main {
+    padding: 10px 16px 0px 16px;
+  }
+}
+
+@media (max-width: 380px) {
+  .help {
+    font-size: 40px;
+  }
+}

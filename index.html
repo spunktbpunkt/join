@@ -1,0 +1,75 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Join</title>
+
+    <link rel="shortcut icon" href="../images/joinlogowhite.svg" type="image/x-icon">
+    <link rel="stylesheet" href="./styles/standard.css">
+    <link rel="stylesheet" href="./styles/index.css">
+    <link rel="stylesheet" href="./styles/responsive/index-resp.css">
+
+
+</head>
+
+<body onload="onLoad()">
+
+    <img src="./images/joinlogodark.svg" id="logoImg" class="animation logo hide">
+
+    <main id="main" class="mainDiv">
+        <div id="mainContent">
+            <div id="loginDiv" class="loginDiv">
+                <span class="accountHeader">Log in</span>
+                <div class="loginInputDiv">
+                    <div class="inputDiv">
+                        <input type="text" id="emailInput" placeholder="Email" class="loginInput">
+                        <img src="./images/mail.svg" alt="" class="inputImg">
+                    </div>
+                    <span id="emailErrorSpan" class="errorSpan">emailErrorSpan</span>
+                    <div class="inputDiv">
+                        <input type="password" id="passwordInput" placeholder="Password" class="loginInput"
+                            onfocus="changeIconToVisibility(this.id)" onblur="showLockIconLogin(this.id,'login')">
+                        <img id="passwordImg" src="./images/lock.svg" alt="" class="inputImg"
+                            onclick="passwordVisibility(this.id)">
+                    </div>
+                    <span id="passwordErrorSpan" class="errorSpan">Check your email and password. Please try
+                        again.</span>
+
+                </div>
+                <div id="loginButtonDiv" class="loginButtonDiv">
+                    <div class="buttonRow">
+                        <button onclick="login()" class="blueBtn">Log in</button>
+                        <button onclick="guestLogin()" class="whiteBtn">Guest Log in</button>
+                    </div>
+                    <span id="loginFailErrorSpan" class="errorSpan textCenter">Email and/or Password incorrect. Please
+                        try
+                        again.</span>
+                </div>
+            </div>
+        </div>
+        <div id="signUpDiv">
+            <span class="signUpSpan">Not a Join User?</span>
+            <a id="linkCreateAccount" href="./html/createaccount.html">Sign up</a>
+
+        </div>
+        <div id="legal">
+            <a href="./html/externPrivacyPolicy.html" class="legalText">Privacy Policy</a>
+            <a href="./html/externLegalNotice.html" class="legalText">Legal Notice</a>
+        </div>
+
+        <span id="loginSuccess" class="animation loginSuccess displayNone">You logged in successfully.</span>
+
+    </main>
+
+
+
+    <script src="./scripts/errorHandling.js"></script>
+    <script src="./scripts/script.js"></script>
+    <script src="./scripts/index.js"></script>
+    <script src="./scripts/firebase.js"></script>
+
+</body>
+
+</html>

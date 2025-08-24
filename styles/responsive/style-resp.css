@@ -1,0 +1,106 @@
+@media (max-width: 1000px) {
+  aside {
+    width: 150px;
+  }
+
+  nav a,
+  #legal a {
+    padding-left: 16px;
+  }
+
+  main {
+    width: calc(100% - 150px);
+    left: 150px;
+  }
+
+  /* header {
+        width: calc(100% - 250px);
+        left: 150px;
+        padding-left: 100px;
+    } */
+}
+
+@media (max-width: 800px) {
+  aside {
+    display: none;
+  }
+
+  main {
+    width: 100%;
+    left: 0;
+  }
+
+  #main {
+    padding: 0;
+  }
+
+  header {
+    height: 80px;
+    padding-left: 0;
+    width: 100%;
+  }
+
+  .header-container {
+    padding-left: 0 !important;
+    padding: 0;
+    width: 100%;
+  }
+
+  /* help button hidden */
+  .header-container div:nth-child(2) a:first-child {
+    display: none;
+  }
+
+  .header-container div:first-child span {
+    display: none;
+  }
+
+  .header-container div:first-child img {
+    display: block;
+    height: 40px;
+    padding: 16px;
+  }
+
+  .help-icon {
+    display: none;
+  }
+
+  footer {
+    display: flex;
+    justify-content: space-around;
+    position: fixed;
+    bottom: 0;
+    left: 0;
+    height: 80px;
+    width: 100vw;
+    background-color: var(--primary-color);
+  }
+
+  footer img {
+    width: 20px;
+    height: 20px;
+    margin-bottom: 4px;
+  }
+
+  footer a {
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    text-decoration: none;
+    font-size: 14px;
+    color: var(--font-color);
+    margin: 0 5px;
+    border-radius: 16px;
+    white-space: nowrap;
+    width: 80px;
+  }
+}
+
+@media (max-width: 800px) {
+  .userLinkOptions {
+    position: fixed !important;
+    top: 80px;
+    right: 0;
+  }
+}

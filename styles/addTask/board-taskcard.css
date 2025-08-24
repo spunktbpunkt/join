@@ -1,0 +1,161 @@
+.task {
+  display: flex;
+  flex-direction: column;
+  width: calc(100% - 32px);
+  background: white;
+  border-radius: 24px;
+  padding: 18px;
+  margin-bottom: 20px;
+  cursor: pointer;
+  box-shadow: 0 0 14px 3px rgba(0, 0, 0, 0.04);
+  transition: transform 0.2s ease-in-out;
+  height: 256px;
+  position: relative;
+}
+
+.task:hover {
+  transform: scale(1.02);
+  cursor: grab;
+}
+
+.task-category {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 20px;
+}
+
+.task-category button {
+  width: 26px;
+  height: 24px;
+  border: 1px solid var(--primary-color);
+  border-radius: 6px;
+  padding: 2px 3px 2px 3px;
+  background: url("../../images/swap_horiz.svg");
+  background-repeat: no-repeat;
+  background-position: center;
+  display: none;
+}
+
+.task-category button:hover {
+  cursor: pointer;
+}
+
+.task-category span{
+  display: inline-block;
+  padding: 4px 10px;
+  border-radius: 8px;
+  font-size: 16px;
+  max-width: 100%;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  box-sizing: border-box;
+}
+
+.task-category.user-story span{
+  background: #0038ff;
+  color: white;
+}
+
+.task-category.technical-task span{
+  background: #1fd7c1;
+  color: white;
+}
+
+.task .task-title {
+  font-size: 16px;
+  font-weight: 700;
+  margin: 0 0 10px 0;
+  color: var(--text-color);
+}
+
+.task .task-description {
+  color: #a8a8a8;
+  font-size: 16px;
+  margin: 0 0 20px 0;
+}
+
+.task-footer {
+  display: flex;
+  flex-direction: column;
+  gap: 20px;
+}
+
+.task-subtasks {
+  display: flex;
+  flex-direction: row;
+  gap: 8px;
+  width: 100%;
+  align-items: center;
+  transition: transform 0.2s ease-in-out;
+}
+
+.task-subtasks:hover .subtask-count {
+  transform: scale(1.15);
+  transition: transform 0.2s ease-in-out;
+}
+
+.subtask-count.all-done:hover {
+  color: var(--priority-color-low) !important;
+}
+
+.subtask-count.not-done:hover {
+  color: var(--priority-color-urgent) !important;
+}
+
+.subtask-progress-container {
+  width: 100%;
+  height: 8px;
+  background: #f4f4f4;
+  border-radius: 4px;
+  overflow: hidden;
+}
+
+.subtask-progress-bar {
+  height: 100%;
+  background: var(--accent-color);
+  border-radius: 4px;
+  transition: width 0.2s ease;
+}
+
+.subtask-count {
+  color: #a8a8a8;
+  font-size: 12px;
+  white-space: nowrap;
+}
+
+.task-bottom-info {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  width: 100%;
+}
+
+.task-assignees {
+  display: flex;
+  margin-left: 8px;
+  min-width: 0;
+  gap: 4px;
+  flex-wrap: nowrap;
+}
+
+.task-assignee {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 35px;
+  height: 35px;
+  font-size: 12px;
+  border: 2px solid white;
+  margin-left: -8px;
+  min-width: 0;
+  border-radius: 50%;
+  transition: width 0.2s, height 0.2s, font-size 0.2s;
+  background: #0d9023;
+  color: white;
+}
+
+.task-assignee:first-child {
+  margin-left: 0;
+}

@@ -1,0 +1,464 @@
+.textCenter {
+  text-align: center;
+}
+
+aside {
+  position: fixed !important;
+  z-index: 20;
+}
+
+body {
+  overflow: hidden;
+}
+
+#allContacts {
+  position: absolute;
+  top: 100px;
+  padding: 0;
+  height: calc(100vh - 190px);
+  overflow: auto;
+  overflow-y: visible;
+  width: 340px;
+}
+
+.contentRight {
+  height: calc(100vh - 90px);
+  /* min-height: 700px; */
+  overflow-y: auto;
+  width: 100%;
+}
+
+#contactDetails {
+  position: absolute;
+  top: 100px;
+  left: 10px;
+}
+
+#contactDetailsMail {
+  text-decoration: none;
+  color: var(--accent-color);
+}
+
+.contactDetailsPerson {
+  display: flex;
+  flex-direction: row;
+  margin-bottom: 50px;
+  align-items: center;
+}
+
+.contactDetailsPerson section {
+  display: flex;
+  flex-direction: column;
+  align-items: start;
+  justify-content: space-around;
+  width: calc(100% - 147px);
+}
+
+.contactDetailsPerson img {
+  height: 24px
+}
+
+.contactDetailsPerson div {
+  display: flex;
+  align-items: start;
+  width: auto;
+  justify-content: start;
+  margin-right: 15px;
+}
+
+.contactDetailsPerson nav {
+  cursor: pointer;
+  display: flex;
+  flex-direction: row;
+  justify-content: start;
+  padding: 0;
+  align-items: center;
+}
+
+.manipulateBtnDiv {
+  display: flex;
+  flex-direction: column;
+  gap: 0px;
+  align-items: start;
+  justify-content: start;
+}
+
+main {
+  align-items: start;
+}
+
+#mainContent {
+  display: flex;
+  flex-direction: row;
+  background-color: var(--background-color);
+  margin: 0;
+  position: absolute;
+  width: 100%;
+}
+
+.contentLeft {
+  background-color: white;
+  width: 340px;
+  height: calc(100vh - 68px);
+  display: flex;
+  justify-content: start;
+  flex-direction: column;
+  align-items: center;
+  box-shadow: 2px 2px 5px rgba(0, 0, 0, 0.1);
+  z-index: 1;
+}
+
+.contentLeft section {
+  display: flex;
+  align-items: center;
+  flex-direction: column;
+}
+
+#contactDetailsName {
+  font-size: 47px;
+  font-weight: 500;
+  margin: 10px;
+}
+
+.capital {
+  display: flex;
+  justify-content: start;
+  flex-direction: column;
+  padding: 20px;
+}
+
+.userInitials {
+  color: white;
+  border-radius: 50%;
+  height: 35px;
+  width: 35px;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  font-size: 12px;
+  padding: 0;
+}
+
+.userInitialsBig {
+  color: white;
+  border: solid 3px white;
+  border-radius: 50%;
+  height: calc(120px - 6px);
+  width: calc(120px - 6px);
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  font-size: 47px;
+  padding: 0;
+  margin-right: 30px;
+}
+
+.singleUser {
+  position: relative;
+  overflow: hidden;
+  display: flex;
+  flex-direction: row;
+  gap: 10px;
+  align-items: center;
+  padding: 10px 10px;
+  margin: 5px 0;
+  color: black;
+  cursor: pointer;
+  background: linear-gradient(to bottom, white, lightgray);
+  background-size: 100% 0%;
+  background-repeat: no-repeat;
+  background-position: top;
+
+  transition:
+    background-size 0.3s ease-in-out,
+    border-radius 0.1s ease-in-out;
+
+}
+
+.singleUser:hover {
+  background-size: 100% 100%;
+  border-radius: 1rem;
+}
+
+.singleUserChosen {
+  display: flex;
+  flex-direction: row;
+  gap: 10px;
+  align-items: center;
+  padding: 10px 10px;
+  margin: 5px 0;
+  cursor: pointer;
+  background-color: var(--primary-color);
+  border-radius: 1rem;
+  color: white;
+}
+
+.userDetails {
+  display: flex;
+  flex-direction: column;
+}
+
+.userName {
+  margin: 5px 0px;
+  text-align: left;
+}
+
+.userLinkOptions {
+  z-index: 2;
+}
+
+.emailText {
+  padding: 0;
+  color: var(--link-color);
+  display: inline-block;
+  max-width: 210px;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+  overflow: hidden;
+  text-align: left;
+}
+
+.emailText:hover {
+  background-color: transparent;
+}
+
+.separator {
+  background-color: var(--border-color);
+  width: 100%;
+  height: 1px;
+  margin: 20px 0px;
+}
+
+.spanLetter {
+  text-align: left;
+  margin-left: 22px;
+}
+
+.frame-40 {
+  display: flex;
+  align-items: center;
+  max-width: 550px;
+  height: 73px;
+  gap: 30px;
+  position: relative;
+  top: 100px;
+  margin: 0px 50px;
+}
+
+.frame-40 h1 {
+  font-size: 48px;
+  font-weight: 700;
+  height: auto;
+  width: fit-content;
+  line-height: 120%;
+  cursor: context-menu;
+}
+
+.frame-40-vektor {
+  border: 2px solid #29ABE2;
+  height: 59px;
+  border-radius: 1rem;
+}
+
+.marginRight20px {
+  margin-right: 20px;
+}
+
+.frame-40 p {
+  height: auto;
+  line-height: 120%;
+  font-weight: 400;
+  font-size: 20px;
+  color: #2A3647;
+  cursor: context-menu;
+}
+
+.contactInformations {
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+}
+
+.contactInformations p {
+  margin-top: 20px;
+  margin-left: 0px;
+  font-weight: bold;
+}
+
+.contactInformations span,
+a,
+strong {
+  margin: 0px 0px;
+}
+
+.loginInput {
+  border: solid 1px #D1D1D1;
+  border-radius: 10px;
+  height: 46px;
+  border-width: 1px;
+  max-width: 375px;
+  font-size: 20px;
+  background-repeat: no-repeat;
+  background-position: calc(100% - 20px) center;
+  padding: 0px 20px;
+  margin: 10px 0px;
+  outline: none;
+  width: 80%;
+}
+
+input:focus {
+  border-color: var(--text-underline-color);
+}
+
+.personImgBackground {
+  background-image: url("/images/person.svg");
+}
+
+.mailImgBackground {
+  background-image: url("/images/mail.svg");
+}
+
+.callImgBackground {
+  background-image: url("/images/call.svg");
+}
+
+.passwordImgBackground {
+  background-image: url("/images/lock.svg");
+}
+
+.blueHover:hover {
+  color: var(--text-underline-color);
+  transition: all 0.1s ease-in-out;
+}
+
+.redBorder {
+  border-color: red;
+}
+
+.contactsFrame {
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+}
+
+.contactsFrame h1 {
+  order: 1;
+}
+
+.contactsFrame div {
+  order: 2;
+}
+
+.contactsFrame p {
+  margin-left: 20px;
+  order: 3;
+}
+
+.contactsFrameResponsive {
+  display: none;
+}
+
+#backToList {
+  visibility: hidden;
+}
+
+.addContactResponsiv {
+  display: none;
+}
+
+.errorSpan {
+  height: 14px;
+  font-size: 10px;
+  color: red;
+  z-index: 3000;
+}
+
+.errorSpan.visible {
+  visibility: visible;
+}
+
+.errorSpanContact {
+  height: 14px;
+  font-size: 10px;
+  color: red;
+  visibility: hidden;
+  width: 80%;
+  z-index: 3000;
+  max-width: 375px;
+}
+
+#logo {
+  display: flex;
+  justify-content: center;
+}
+
+.gap20px {
+  gap: 20px;
+}
+
+.hide {
+  display: none;
+}
+
+.flex {
+  display: flex;
+}
+
+.visibleNone {
+  visibility: hidden;
+}
+
+.visible {
+  visibility: visible;
+}
+
+.zindex1 {
+  z-index: 1;
+}
+
+.zindex2 {
+  z-index: 2;
+}
+
+.header-container {
+  padding-left: 100px;
+}
+
+
+@keyframes fadeBackground {
+  from {
+    background-color: rgba(100, 100, 100, 0);
+  }
+
+  to {
+    background-color: rgba(100, 100, 100, 0.5);
+  }
+}
+
+@keyframes slideInFromRight {
+  from {
+    left: 100%;
+    top: 50%;
+    transform: translate(0%, -50%)
+  }
+
+  to {
+    left: 50%;
+    top: 50%;
+    transform: translate(-50%, -50%)
+  }
+}
+
+@keyframes slideInFromBottom {
+  from {
+    left: 50%;
+    top: 100%;
+    transform: translate(-50%, 0%)
+  }
+
+  to {
+    left: 50%;
+    top: 50%;
+    transform: translate(-50%, -50%)
+  }
+}

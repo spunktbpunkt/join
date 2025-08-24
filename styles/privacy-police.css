@@ -1,0 +1,50 @@
+html {
+  scroll-behavior: smooth;
+}
+
+.legal-main {
+  position: absolute;
+  gap: 40px;
+  display: flex;
+  flex-direction: column;
+  left: 200px;
+  top: 90px;
+  margin: 30px 80px 0 80px;
+  padding-bottom: 30px;
+}
+
+.legal-main h1 {
+  margin: 0;
+  font-size: 61px;
+}
+
+.pp-container {
+  max-width: 950px;
+  min-height: 309px;
+  cursor: context-menu;
+}
+
+aside {
+  position: fixed;
+  bottom: 0;
+  z-index: 3;
+}
+
+header {
+  box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+  position: fixed;
+  top: 0;
+  z-index: 2
+}
+
+header span {
+  margin-left: 300px;
+}
+
+.d-none {
+  display: none;
+}
+
+.pp-container-heading {
+  margin-top: 0px;
+}

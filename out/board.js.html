@@ -1,0 +1,261 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="utf-8">
+    <title>JSDoc: Source: board.js</title>
+
+    <script src="scripts/prettify/prettify.js"> </script>
+    <script src="scripts/prettify/lang-css.js"> </script>
+    <!--[if lt IE 9]>
+      <script src="//html5shiv.googlecode.com/svn/trunk/html5.js"></script>
+    <![endif]-->
+    <link type="text/css" rel="stylesheet" href="styles/prettify-tomorrow.css">
+    <link type="text/css" rel="stylesheet" href="styles/jsdoc-default.css">
+</head>
+
+<body>
+
+<div id="main">
+
+    <h1 class="page-title">Source: board.js</h1>
+
+    
+
+
+
+    
+    <section>
+        <article>
+            <pre class="prettyprint source linenums"><code>let allTasks = [];
+
+
+/**
+ * Initializes the board by setting up user links, fetching data, rendering tasks,
+ * and configuring drag-and-drop functionality.
+ */
+async function init() {
+  fillUserLinks();
+  await fetchData();
+  await renderTasks();
+  setupDragDrop();
+  setupSubtaskInputListeners();
+  getCurrentHTML();
+  addHelpToPopup();
+}
+
+
+/**
+ * Sets up listeners for the subtask input field to toggle visibility of action buttons.
+ */
+function setupSubtaskInputListeners() {
+  const inputField = document.querySelector("#subtasks input");
+  const plus = document.getElementById("subtaskPlus");
+  const cross = document.getElementById("subtaskCross");
+  const check = document.getElementById("subtaskCheck");
+
+  if (inputField) {
+    inputField.addEventListener("input", function () {
+      if (inputField.value.trim() !== "") {
+        plus.style.display = "none";
+        cross.style.display = "unset";
+        check.style.display = "unset";
+      } else {
+        plus.style.display = "unset";
+        cross.style.display = "none";
+        check.style.display = "none";
+      }
+    });
+  }
+}
+
+
+/**
+ * Updates the stage of a task in Firebase based on the container it is moved to.
+ * @param {HTMLElement} container - The container element representing the new stage.
+ * @param {string} taskId - The unique identifier of the task to update.
+ */
+async function updateStage(container, taskId) {
+  const newStage = getStageFromContainer(container.id);
+  const tasksResponse = await fetch(BASE_URL + "/tasks.json");
+  const tasks = await tasksResponse.json();
+
+  const task = tasks[taskId];
+  if (task) {
+    task.stage = newStage;
+
+    const targetURL = BASE_URL + "/tasks/" + taskId + ".json";
+
+    await fetch(targetURL, {
+      method: "PUT",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify(task),
+    });
+
+    await fetchData();
+  }
+}
+
+
+/**
+ * Maps container IDs to their corresponding stage indices.
+ * @param {string} containerId - The ID of the container.
+ * @returns {number} The stage index corresponding to the container ID.
+ */
+function getStageFromContainer(containerId) {
+  switch (containerId) {
+    case "toDo":
+      return 0;
+    case "inProgress":
+      return 1;
+    case "awaitFeedback":
+      return 2;
+    case "done":
+      return 3;
+    default:
+      return 0;
+  }
+}
+
+
+/**
+ * Fetches all tasks from Firebase and populates the global `allTasks` array.
+ */
+async function fetchData() {
+  const res = await fetch(BASE_URL + "/tasks.json");
+  const tasks = await res.json();
+  allTasks = [];
+
+  if (tasks) {
+    for (const key in tasks) {
+      const task = tasks[key];
+      if (task.stage != null) {
+        allTasks.push({ ...task, id: key });
+      }
+    }
+  }
+
+  renderTasks();
+}
+
+
+/**
+ * Renders all four columns of the board with tasks.
+ */
+async function renderTasks() {
+  const containers = document.querySelectorAll("#boardContent .task-list");
+  renderColumnBtns(containers);
+
+  for (let i = 0; i &lt; 4; i++) {
+    const stageTasks = allTasks.filter(task => task.stage === i);
+    if (stageTasks.length === 0) {
+      containers[i].innerHTML += noTaskHtml;
+    } else {
+      stageTasks.forEach(task => {
+        containers[i].innerHTML += generateTaskCard(task);
+      });
+    }
+  }
+
+  addDragFunction();
+  await applyUserColors();
+}
+
+
+/**
+ * Renders buttons for each column of the board.
+ * @param {NodeList} containers - The list of container elements for the columns.
+ * @returns {NodeList} The updated list of containers with buttons rendered.
+ */
+function renderColumnBtns(containers) {
+  const statusLabels = ["To do", "In Progress", "Await Feedback", "Done"];
+  const statusKeys = ["todo", "inProgress", "awaitFeedback", "done"];
+
+  containers.forEach((container, i) => {
+    container.innerHTML = columnBtnTemplate(statusLabels[i], statusKeys[i]);
+  });
+  return containers;
+}
+
+
+/**
+ * Applies user-specific colors to task assignee avatars.
+ */
+async function applyUserColors() {
+  try {
+    const allUsers = await loadAllUsers();
+    const peopleById = allUsers.reduce((map, person) => {
+      map[person.id] = person;
+      return map;
+    }, {});
+
+    document.querySelectorAll(".task-assignee").forEach(el => {
+      const uid = el.dataset.userId;
+      const person = peopleById[uid];
+      if (person &amp;&amp; person.color) {
+        el.style.backgroundColor = person.color;
+      }
+    });
+  } catch (err) {
+    console.error("Fehler beim Anwenden der Benutzerfarben:", err);
+  }
+}
+
+
+/**
+ * Checks if the current device is a mobile device based on screen width.
+ * @returns {boolean} True if the device is mobile, false otherwise.
+ */
+function isMobile() {
+  return window.innerWidth &lt;= 800;
+}
+
+
+/**
+ * Move search input field to responsive layout
+ */
+document.addEventListener("DOMContentLoaded", function () {
+    const searchInputField = document.getElementById("searchInput");
+    const originalParent = document.querySelector("#boardHeader div");
+    const newParent = document.getElementById("searchInput-resp-target");
+
+    function moveInputFieldOnResize() {
+      if (isMobile()) {
+        pressTimer = setTimeout(() => {
+          document.querySelectorAll(".task").forEach(task => task.setAttribute("draggable", "false"));
+        }, 600);
+        if (!newParent.contains(searchInputField)) {
+          newParent.appendChild(searchInputField);
+        }
+      } else {
+        document.querySelectorAll(".task").forEach(task => task.setAttribute("draggable", "true"));
+        if (!originalParent.contains(searchInputField)) {
+          originalParent.insertBefore(searchInputField, originalParent.firstChild);
+        }
+      }
+    }
+
+    window.addEventListener("resize", moveInputFieldOnResize);
+    moveInputFieldOnResize(); // Initial run
+});</code></pre>
+        </article>
+    </section>
+
+
+
+
+</div>
+
+<nav>
+    <h2><a href="index.html">Home</a></h2><h3>Global</h3><ul><li><a href="global.html#applyUserColors">applyUserColors</a></li><li><a href="global.html#fetchData">fetchData</a></li><li><a href="global.html#getStageFromContainer">getStageFromContainer</a></li><li><a href="global.html#init">init</a></li><li><a href="global.html#isMobile">isMobile</a></li><li><a href="global.html#renderColumnBtns">renderColumnBtns</a></li><li><a href="global.html#renderTasks">renderTasks</a></li><li><a href="global.html#setupSubtaskInputListeners">setupSubtaskInputListeners</a></li><li><a href="global.html#updateStage">updateStage</a></li></ul>
+</nav>
+
+<br class="clear">
+
+<footer>
+    Documentation generated by <a href="https://github.com/jsdoc/jsdoc">JSDoc 4.0.4</a> on Tue May 27 2025 19:55:12 GMT+0200 (Mitteleuropäische Sommerzeit)
+</footer>
+
+<script> prettyPrint(); </script>
+<script src="scripts/linenumber.js"> </script>
+</body>
+</html>

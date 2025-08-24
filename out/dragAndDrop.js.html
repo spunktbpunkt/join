@@ -1,0 +1,264 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="utf-8">
+    <title>JSDoc: Source: dragAndDrop.js</title>
+
+    <script src="scripts/prettify/prettify.js"> </script>
+    <script src="scripts/prettify/lang-css.js"> </script>
+    <!--[if lt IE 9]>
+      <script src="//html5shiv.googlecode.com/svn/trunk/html5.js"></script>
+    <![endif]-->
+    <link type="text/css" rel="stylesheet" href="styles/prettify-tomorrow.css">
+    <link type="text/css" rel="stylesheet" href="styles/jsdoc-default.css">
+</head>
+
+<body>
+
+<div id="main">
+
+    <h1 class="page-title">Source: dragAndDrop.js</h1>
+
+    
+
+
+
+    
+    <section>
+        <article>
+            <pre class="prettyprint source linenums"><code>/**
+ * Tracks the container from which a task is being dragged.
+ * @type {HTMLElement | null}
+ */
+let draggedFromContainer = null;
+
+/**
+ * Sets up drag-and-drop functionality and event listeners for buttons.
+ */
+function setupDragDrop() {
+  const containers = document.querySelectorAll("#boardContent .task-list");
+  containers.forEach(setupDropZone);
+
+  const addTaskBtn = document.getElementById("addTaskBtn");
+  if (addTaskBtn) addTaskBtn.addEventListener("click", () => showAddTaskOverlay("add"));
+}
+
+/**
+ * Configures a container as a drop zone for drag-and-drop operations.
+ * @param {HTMLElement} container - The container to set up as a drop zone.
+ */
+function setupDropZone(container) {
+  container.addEventListener("dragover", handleDragOver);
+  container.addEventListener("drop", e => handleDrop(e, container));
+  setupContainerHighlighting(container);
+}
+
+/**
+ * Handles the dragover event to allow dropping.
+ * @param {DragEvent} e - The dragover event.
+ */
+function handleDragOver(e) {
+  e.preventDefault();
+  e.dataTransfer.dropEffect = "move";
+}
+
+/**
+ * Handles the drop event to update the task's stage and apply visual effects.
+ * @param {DragEvent} e - The drop event.
+ * @param {HTMLElement} container - The container where the task is dropped.
+ */
+function handleDrop(e, container) {
+  e.preventDefault();
+  container.classList.remove("highlight-container");
+
+  const rawId = e.dataTransfer.getData("text/plain");
+  const taskId = rawId.replace("task", "");
+
+  updateStage(container, taskId);
+
+  setTimeout(() => {
+    const newTask = document.getElementById(rawId);
+    if (newTask) {
+      newTask.scrollIntoView({ behavior: "smooth", block: "center" });
+      dropHighlight(newTask);
+    }
+  }, 400);
+  draggedFromContainer = null;
+}
+
+/**
+ * Sets up highlighting for a container during drag-and-drop operations.
+ * @param {HTMLElement} container - The container to set up highlighting for.
+ */
+function setupContainerHighlighting(container) {
+  let dragCounter = 0;
+
+  container.addEventListener("dragenter", function () {
+    dragCounter++;
+    if (container !== draggedFromContainer) {
+      container.classList.add("highlight-container");
+    }
+  });
+
+  container.addEventListener("dragleave", function () {
+    dragCounter--;
+    if (dragCounter === 0) {
+      container.classList.remove("highlight-container");
+    }
+  });
+
+  container.addEventListener("dragend", function () {
+    dragCounter = 0;
+    container.classList.remove("highlight-container");
+  });
+}
+
+/**
+ * Makes tasks draggable and sets up dragstart event listeners.
+ */
+function addDragFunction() {
+  if (!isMobile()) {
+    const tasks = document.querySelectorAll(".task");
+    tasks.forEach(task => {
+      task.setAttribute("draggable", "true");
+      task.addEventListener("dragstart", function (e) {
+        e.dataTransfer.setData("text/plain", task.id);
+        e.dataTransfer.effectAllowed = "move";
+
+        draggedFromContainer = task.closest(".task-list");
+        dragAnimation(task);
+      });
+    });
+  } else {
+    addMobileDragFunction();
+  }
+}
+
+/**
+ * Adds drag-and-drop functionality for mobile devices.
+ */
+function addMobileDragFunction() {
+  const tasks = document.querySelectorAll(".task");
+  tasks.forEach(task => {
+    setupTouchStart(task);
+    setupTouchEnd(task);
+    setupTouchMove(task);
+  });
+}
+
+/**
+ * Sets up the touchstart event for a task.
+ * @param {HTMLElement} task - The task element.
+ */
+function setupTouchStart(task) {
+  task.addEventListener("touchstart", function () {
+    pressTimer = setTimeout(() => handleLongPress(task), 600);
+  }, { passive: true });
+}
+
+/**
+ * Sets up the touchend event for a task.
+ * @param {HTMLElement} task - The task element.
+ */
+function setupTouchEnd(task) {
+  task.addEventListener("touchend", function () {
+    clearTimeout(pressTimer);
+  });
+}
+
+/**
+ * Sets up the touchmove event for a task.
+ * @param {HTMLElement} task - The task element.
+ */
+function setupTouchMove(task) {
+  task.addEventListener("touchmove", function () {
+    clearTimeout(pressTimer);
+  });
+}
+
+/**
+ * Handles a long press on a task for mobile devices.
+ * @param {HTMLElement} task - The task element.
+ */
+function handleLongPress(task) {
+  const mobileActions = document.getElementById("mobileTaskActions");
+  if (mobileActions) mobileActions.remove();
+  doSomethingOnLongPress(task);
+}
+
+/**
+ * Adds a drag animation to a task during dragstart.
+ * @param {HTMLElement} task - The task element.
+ */
+function dragAnimation(task) {
+  task.style.transform = "rotate(3deg)";
+  task.style.transition = "transform 0.2s";
+
+  task.addEventListener("dragend", function resetRotation() {
+    task.style.transform = "rotate(0deg)";
+    task.removeEventListener("dragend", resetRotation);
+  });
+}
+
+/**
+ * Highlights a task element after it is dropped.
+ * @param {HTMLElement} taskElement - The task element to highlight.
+ */
+function dropHighlight(taskElement) {
+  taskElement.classList.add("task-dropped");
+
+  setTimeout(() => {
+    taskElement.classList.remove("task-dropped");
+  }, 500);
+}
+
+/**
+ * Handles actions for a long press on a task for mobile devices.
+ * @param {HTMLElement} task - The task element.
+ */
+function doSomethingOnLongPress(task) {
+  task.innerHTML += mobileActionsTemplate();
+  const savedOnclick = task.onclick;
+  task.onclick = null;
+
+  document.addEventListener("click", function (e) {
+    const mobileActions = document.getElementById("mobileTaskActions");
+    if (!mobileActions.contains(e.target)) {
+      mobileActions.remove();
+      task.onclick = savedOnclick;
+    }
+  });
+}
+
+/**
+ * Processes mobile input to update the stage of a task.
+ * @param {string} containerId - The ID of the container to move the task to.
+ */
+function processMobileInput(containerId) {
+  const container = document.getElementById(containerId);
+  const mobileActions = document.getElementById("mobileTaskActions");
+  const taskId = mobileActions.parentElement.id.replace("task", "");
+  updateStage(container, taskId);
+}</code></pre>
+        </article>
+    </section>
+
+
+
+
+</div>
+
+<nav>
+    <h2><a href="index.html">Home</a></h2><h3>Global</h3><ul><li><a href="global.html#addDragFunction">addDragFunction</a></li><li><a href="global.html#addMobileDragFunction">addMobileDragFunction</a></li><li><a href="global.html#doSomethingOnLongPress">doSomethingOnLongPress</a></li><li><a href="global.html#dragAnimation">dragAnimation</a></li><li><a href="global.html#draggedFromContainer">draggedFromContainer</a></li><li><a href="global.html#dropHighlight">dropHighlight</a></li><li><a href="global.html#handleDragOver">handleDragOver</a></li><li><a href="global.html#handleDrop">handleDrop</a></li><li><a href="global.html#handleLongPress">handleLongPress</a></li><li><a href="global.html#processMobileInput">processMobileInput</a></li><li><a href="global.html#setupContainerHighlighting">setupContainerHighlighting</a></li><li><a href="global.html#setupDragDrop">setupDragDrop</a></li><li><a href="global.html#setupDropZone">setupDropZone</a></li><li><a href="global.html#setupTouchEnd">setupTouchEnd</a></li><li><a href="global.html#setupTouchMove">setupTouchMove</a></li><li><a href="global.html#setupTouchStart">setupTouchStart</a></li></ul>
+</nav>
+
+<br class="clear">
+
+<footer>
+    Documentation generated by <a href="https://github.com/jsdoc/jsdoc">JSDoc 4.0.4</a> on Tue May 27 2025 19:55:28 GMT+0200 (Mitteleuropäische Sommerzeit)
+</footer>
+
+<script> prettyPrint(); </script>
+<script src="scripts/linenumber.js"> </script>
+</body>
+</html>

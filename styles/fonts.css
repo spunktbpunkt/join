@@ -1,0 +1,11 @@
+.main-container h1 {
+    font-size: 48px !important;
+    margin: 0 0 40px 0;
+    cursor: context-menu;
+}
+
+#boardHeader h1 {
+    font-size: 48px !important;
+   margin: auto 0;
+    cursor: context-menu;
+}

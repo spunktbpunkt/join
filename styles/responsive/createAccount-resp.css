@@ -1,0 +1,133 @@
+@media (max-width: 650px) {
+    .createAccountDiv {
+        padding: 20px 5px;
+    }
+
+    #backToLogin {
+        left: -150px;
+    }
+
+    #mainContent {
+        margin: 25px;
+    }
+
+    .blueBtn {
+        width: 168px;
+        font-size: 16px;
+    }
+
+    #accountHeader {
+        font-size: 47px;
+    }
+}
+
+@media (max-width: 550px) {
+    .loginInputDiv {
+        gap: 5px;
+
+    }
+
+    .loginInput {
+        height: 46px;
+        width: 75%;
+        font-size: 20px;
+        padding: 0px 20px;
+        margin: 0px 0px;
+        font-size: 16px;
+    }
+
+    .accountHeader {
+        font-size: 47px;
+    }
+
+    #backToLogin {
+        left: -125px;
+    }
+
+    #acceptPrivacy {
+        font-size: 14px;
+    }
+
+    #acceptPrivacyPolicy {
+        height: 80%;
+    }
+}
+
+@media(max-width: 400px) {
+    .accountHeader {
+        font-size: 30px;
+        text-underline-offset: 13px;
+    }
+
+    #backToLogin {
+        left: -75px;
+        top: 20px;
+    }
+
+    .loginInput {
+        padding-right: 60px;
+    }
+
+
+    .errorSpan {
+        font-size: 8px;
+    }
+}
+
+@media (max-height: 900px) {
+    .logo {
+        top: 30px;
+        left: 30px;
+        height: 80px;
+    }
+
+    .createAccountDiv {
+        height: 450px;
+        padding: 15px 5px;
+    }
+
+    .loginInputDiv {
+        gap: 1px;
+    }
+
+    #acceptPrivacy {
+        margin: 5px 0px;
+    }
+
+    #legal {
+        position: absolute;
+        bottom: 20px;
+    }
+}
+
+@media (max-height: 720px) {
+    .createAccountDiv {
+        height: 450px;
+        padding: 5px 5px;
+        transform: translate(0px, 7%);
+    }
+
+    #legal {
+        /* position: absolute; */
+        bottom: 10px;
+    }
+
+    body {
+        /* display: flex; */
+        /* background: var(--background-color); */
+        /* overflow-x: hidden; */
+        /* overflow-y: auto; */
+        height: 100vh;
+        min-height: 630px;
+    }
+    main {
+    /* background-color: var(--background-color); */
+    /* height: 100vh; */
+    min-height: 630px;
+    /* width: 100vw; */
+    /* display: flex; */
+    /* justify-content: center; */
+    /* align-items: center; */
+    /* position: relative; */
+}
+}

@@ -1,0 +1,514 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="utf-8">
+    <title>JSDoc: Source: contact.js</title>
+
+    <script src="scripts/prettify/prettify.js"> </script>
+    <script src="scripts/prettify/lang-css.js"> </script>
+    <!--[if lt IE 9]>
+      <script src="//html5shiv.googlecode.com/svn/trunk/html5.js"></script>
+    <![endif]-->
+    <link type="text/css" rel="stylesheet" href="styles/prettify-tomorrow.css">
+    <link type="text/css" rel="stylesheet" href="styles/jsdoc-default.css">
+</head>
+
+<body>
+
+<div id="main">
+
+    <h1 class="page-title">Source: contact.js</h1>
+
+    
+
+
+
+    
+    <section>
+        <article>
+            <pre class="prettyprint source linenums"><code>let fireBaseContent = {};
+let chosenCard = 0;
+let chosen = false;
+
+
+/**
+ * Loads data from Firebase and assigns it to the global variable `fireBaseContent`.
+ * @async
+ * @returns {Promise&lt;void>} Resolves when data is loaded.
+ */
+async function loadFromFirebase() {
+  fireBaseContent = await loadData();
+}
+
+
+/**
+ * Initializes the contacts page by performing multiple setup tasks.
+ * @async
+ * @returns {Promise&lt;void>} Resolves when initialization is complete.
+ */
+async function onloadContacts() {
+  await loadFromFirebase();
+  setupContactsPage();
+}
+
+
+/**
+ * Sets up the contacts page by populating user links, retrieving contacts,
+ * auto-selecting items, and sending data to an iframe.
+ */
+function setupContactsPage() {
+  fillUserLinks();
+  getContactsFromFirebase();
+  autoSelect();
+  sendDataToIframe();
+  addHelpToPopup();
+  getCurrentHTML();
+}
+
+
+/**
+ * Sends Firebase data to the iframe with the ID "editContact".
+ */
+function sendDataToIframe() {
+  const iframe = document.getElementById("editContact");
+  if (iframe?.contentWindow) {
+    iframe.contentWindow.postMessage(prepareIframeData(), "*");
+  }
+}
+
+
+/**
+ * Prepares the data object to send to the iframe.
+ * @returns {Object} The data object containing Firebase data, token, and results.
+ */
+function prepareIframeData() {
+  return {
+    type: "firebaseData",
+    data: fireBaseContent,
+    token: thisToken,
+    ergebnisse
+  };
+}
+
+
+/**
+ * Fetches and processes contact and login data from Firebase.
+ */
+function getContactsFromFirebase() {
+  const users = mergeAndSortUsers();
+  renderGroupedContacts(groupUsersByLetter(users));
+}
+
+
+/**
+ * Merges and sorts contact and login data from Firebase.
+ * @returns {Array} Sorted array of user objects.
+ */
+function mergeAndSortUsers() {
+  const { login = {}, contact = {} } = fireBaseContent;
+  return Object.values({ ...contact, ...login })
+    .map(({ name, email, color, phone }) => ({ name, email, color, phone }))
+    .sort((a, b) => a.name.localeCompare(b.name, undefined, { sensitivity: "base" }));
+}
+
+
+/**
+ * Groups users by the first letter of their names.
+ * @param {Array} users - Array of user objects.
+ * @returns {Object} Grouped users by letter.
+ */
+function groupUsersByLetter(users) {
+  return users.reduce((acc, user) => {
+    const letter = user.name[0]?.toUpperCase() || "#";
+    (acc[letter] ||= []).push(user);
+    return acc;
+  }, {});
+}
+
+
+/**
+ * Renders grouped contacts into the DOM.
+ * @param {Object} grouped - Grouped users by letter.
+ */
+function renderGroupedContacts(grouped) {
+  const container = document.getElementById("allContacts");
+  container.innerHTML = "";
+  let count = 0;
+
+  Object.entries(grouped).sort().forEach(([letter, group]) => {
+    const groupDiv = createGroupDiv(letter);
+    group.forEach(user => groupDiv.appendChild(createSingleUserNav(user, ++count)));
+    container.appendChild(groupDiv);
+  });
+}
+
+
+/**
+ * Creates a group container div for a given letter.
+ * @param {string} letter - The letter to display.
+ * @returns {HTMLDivElement} The group container div.
+ */
+function createGroupDiv(letter) {
+  const div = document.createElement("div");
+  div.id = `capital${letter}`;
+  div.classList.add("capital");
+  div.appendChild(createGroupHeader(letter));
+  return div;
+}
+
+
+/**
+ * Creates a header for a group container.
+ * @param {string} letter - The letter to display.
+ * @returns {DocumentFragment} The header fragment.
+ */
+function createGroupHeader(letter) {
+  const fragment = document.createDocumentFragment();
+
+  const span = document.createElement("span");
+  span.textContent = letter;
+  span.classList.add("spanLetter");
+  fragment.appendChild(span);
+
+  const sep = document.createElement("div");
+  sep.classList.add("separator");
+  fragment.appendChild(sep);
+
+  return fragment;
+}
+
+
+/**
+ * Creates a navigation element for a single user.
+ * @param {Object} user - The user object.
+ * @param {number} userNumber - The user's unique number.
+ * @returns {HTMLElement} The navigation element.
+ */
+function createSingleUserNav(user, userNumber) {
+  const nav = document.createElement("nav");
+  nav.id = `singleUser${userNumber}`;
+  nav.classList.add("singleUser");
+  nav.appendChild(createUserInitials(user));
+  nav.appendChild(createUserDetails(user, userNumber));
+  nav.addEventListener("click", () => chooseTaskDetails(nav.id));
+  return nav;
+}
+
+
+/**
+ * Creates a span element for user initials.
+ * @param {Object} user - The user object.
+ * @returns {HTMLSpanElement} The initials span element.
+ */
+function createUserInitials(user) {
+  const initials = document.createElement("span");
+  initials.classList.add("userInitials");
+  initials.classList.add(user.color ? `userColor-${user.color.replace("#", "")}` : "userColor-default");
+  initials.textContent = getInitials(user.name);
+  return initials;
+}
+
+
+/**
+ * Creates a div element for user details.
+ * @param {Object} user - The user object.
+ * @param {number} userNumber - The user's unique number.
+ * @returns {HTMLDivElement} The details div element.
+ */
+function createUserDetails(user, userNumber) {
+  const details = document.createElement("div");
+  details.classList.add("userDetails");
+
+  const nameEl = document.createElement("span");
+  nameEl.classList.add("userName");
+  nameEl.textContent = user.name;
+  details.appendChild(nameEl);
+
+  const emailEl = document.createElement("a");
+  emailEl.id = `singleUserMail${userNumber}`;
+  emailEl.href = `mailto:${user.email}`;
+  emailEl.classList.add("emailText");
+  emailEl.textContent = user.email;
+  details.appendChild(emailEl);
+
+  return details;
+}
+
+
+/**
+ * Handles the selection and display of task details for a contact element.
+ * Determines the action to take based on whether a contact is already chosen,
+ * if the same contact is chosen again, or if a different contact is selected.
+ *
+ * @param {string} elementId - The DOM element ID of the contact to select.
+ */
+function chooseTaskDetails(elementId) {
+  const thenum = elementId.match(/\d+/)[0];
+  let caseKey = !chosen
+    ? "not-chosen"
+    : chosenCard !== thenum
+      ? "chosen-different"
+      : "chosen-same";
+
+  switch (caseKey) {
+    case "chosen-different":
+      hideDetails(`singleUser${chosenCard}`);
+      contactDetails(elementId, thenum);
+      break;
+    case "not-chosen":
+      contactDetails(elementId, thenum);
+      break;
+    case "chosen-same":
+      hideDetails(`singleUser${chosenCard}`);
+      break;
+  }
+}
+
+
+/**
+ * Displays the details of a selected contact and updates the UI accordingly.
+ *
+ * @async
+ * @param {string} elementId - The ID of the DOM element representing the contact card.
+ * @param {number} thenum - The unique number/index associated with the contact.
+ * @returns {Promise&lt;void>} Resolves when the contact details have been displayed and UI updated.
+ */
+async function contactDetails(elementId, thenum) {
+  responsiveContentRight('show')
+  chosenCard = thenum;
+  const email = document.getElementById(`singleUserMail${thenum}`).innerText;
+  localStorage.setItem('selectedContactEmail', email);
+  const detail = await getContactDetails(email);
+  const initials = getInitials(detail.name);
+  const color = detail.color.replace("#", "");
+
+  const nav = document.getElementById(elementId);
+  window.innerWidth &lt; 800 ? "" : nav.classList.replace("singleUser", "singleUserChosen")
+  window.innerWidth &lt; 800 ? changeImage('addContactResponsivImg', 'more_vert') : "";
+
+  document.getElementById("contactDetails").classList.remove("hide");
+  document.getElementById("contactDetailsInitials")
+    .className = `userInitialsBig userColor-${color}`;
+  document.getElementById("contactDetailsInitials").innerText = initials;
+  document.getElementById("contactDetailsName").innerText = detail.name;
+  document.getElementById("contactDetailsMail").innerText = detail.email;
+  document.getElementById("contactDetailsMail").href =`mailto:${detail.email}`
+  document.getElementById("contactDetailsPhone").innerText = detail.phone;
+  document.getElementById("deleteError").classList.add("hide");
+
+  thisToken = await findUser(detail.email);
+  chosen = true;
+
+}
+
+
+/**
+ * Clears error messages by hiding the error spans for editing and deleting contacts.
+ * Utilizes the `hideError` function to hide elements with IDs "editErrorSpan" and "deleteErrorSpan".
+ */
+function clearErrors(){
+  hideError("","editErrorSpan")
+  hideError("","deleteErrorSpan")
+}
+
+
+/**
+ * Handles the responsive display of the right content panel based on the given task and window width.
+ * 
+ * When the task is 'show' and the window width is 800px or less, it adjusts the UI for mobile view by:
+ * - Showing the right content panel
+ * - Hiding or resizing other panels and buttons appropriately
+ * 
+ * Otherwise, it resets the UI to the default desktop view.
+ * 
+ * @param {string} task - The action to perform, typically 'show' to display the right content panel responsively.
+ */
+function responsiveContentRight(task) {
+  clearErrors()
+  if (task == 'show' &amp;&amp; window.innerWidth &lt;= 800) {
+    document.getElementById("contentRight").classList.add("showContentRight")
+    document.getElementById("allContacts").classList.add("width0")
+    document.getElementById("contentLeft").classList.add("width0")
+    document.getElementById("backToList").classList.remove("displayNone")
+    document.getElementById("addContactResponsiv").classList.add("visibleNone")
+    document.getElementById("editContactResponsiv").classList.remove("visibleNone")
+  } else {
+    document.getElementById("contentRight").classList.remove("showContentRight")
+    document.getElementById("allContacts").classList.remove("width0")
+    document.getElementById("contentLeft").classList.remove("width0")
+    document.getElementById("backToList").classList.add("displayNone")
+    document.getElementById("deleteError").classList.add("hide")
+    changeImage("addContactResponsivImg", "person_add");
+    document.getElementById("addContactResponsiv").classList.remove("visibleNone")
+    document.getElementById("editContactResponsiv").classList.add("visibleNone")
+  }
+}
+
+
+/**
+ * Hides the contact details and resets the selected user state.
+ *
+ * @param {string} elementId - The ID of the element representing the selected user.
+ */
+function hideDetails(elementId) {
+  document.getElementById(elementId).classList.replace("singleUserChosen", "singleUser");
+  document.getElementById("contactDetails").classList.add("hide");
+  document.getElementById("deleteError").classList.add("hide");
+  chosen = false;
+}
+
+
+/**
+ * Automatically selects and scrolls to the last edited contact in the contact list.
+ * Retrieves the last edited contact's identifier from localStorage, finds the corresponding
+ * contact link in the DOM, selects its details, and scrolls it into view. Finally, removes
+ * the 'lastEditedContact' entry from localStorage.
+ *
+ * Assumes that contact links have the class 'emailText' and are contained within a parent
+ * element with the ID 'allContacts'. Also assumes that each contact link is inside a &lt;nav>
+ * element whose ID can be used with chooseTaskDetails.
+ */
+function autoSelect() {
+  const last = localStorage.getItem('lastEditedContact');
+  if (!last) return;
+
+  const link = Array.from(document.querySelectorAll('#allContacts a.emailText'))
+    .find(a => a.innerText === last);
+
+  if (link) {
+    const nav = link.closest('nav');
+    chooseTaskDetails(nav.id);
+    setTimeout(() => nav.scrollIntoView({ block: 'center', behavior: 'smooth' }), 50);
+  }
+
+  localStorage.removeItem('lastEditedContact');
+}
+
+
+/**
+ * Displays an error message tooltip near a specified element when attempting to edit or delete other registered users.
+ *
+ * @param {string} type - The ID of the element triggering the error (e.g., "editIcon" or another identifier).
+ * @param {number} offsetX - The horizontal offset in pixels to position the error message relative to the element.
+ * @param {number} offsetY - The vertical offset in pixels (currently unused, as top is hardcoded).
+ */
+function deleteErrorContact(type, offsetX, offsetY) {
+  try {
+    const el = document.getElementById(type);
+    const pos = el.getBoundingClientRect();
+    const span = document.getElementById("deleteError");
+    span.innerHTML = type === "editIcon"
+      ? `You can't edit&lt;br>other registered users`
+      : `You can't delete&lt;br>other registered users`;
+    span.classList.remove("hide");
+    span.style.left = `${Math.round(pos.left + offsetX)}px`;
+    span.style.top = `${Math.round(pos.top + offsetY)}px`;
+  } catch {
+    /* ignore */
+  }
+}
+
+
+/**
+ * Retrieves the contact details for a user with the specified email address.
+ *
+ * Attempts to access contact and login data from `fireBaseContent`. If unavailable, it loads the data asynchronously.
+ * Searches for a user whose email matches the provided `emailToFind` and returns their details.
+ * If no matching user is found, returns a default object with empty fields and a default color.
+ *
+ * @async
+ * @param {string} emailToFind - The email address of the user to find.
+ * @returns {Promise&lt;{name: string, email: string, phone: string, color: string}>} 
+ *          An object containing the user's name, email, phone, and color. Returns default values if not found.
+ */
+async function getContactDetails(emailToFind) {
+  let dataLogin, dataContact;
+  try {
+    dataLogin = fireBaseContent.login;
+    dataContact = fireBaseContent.contact;
+  } catch {
+    dataLogin = await loadData("login");
+    dataContact = await loadData("contact");
+  }
+  const dataFull = { ...dataContact, ...dataLogin };
+
+  for (const [, u] of Object.entries(dataFull)) {
+    if (u.email === emailToFind) {
+      return { name: u.name, email: u.email, phone: u.phone, color: u.color };
+    }
+  }
+  return { name: "", email: "", phone: "", color: "#cccccc" };
+}
+
+
+/**
+ * Shows or hides the cancel button ("leftBtn") based on the window's width.
+ * If the window width is less than 800 pixels, hides the button and adjusts the right button's margin.
+ * Otherwise, shows the cancel button.
+ * Handles errors gracefully if elements are not found.
+ */
+function hideCancelBtn() {
+  let task = this.window.innerWidth &lt; 800 ? 'hide' : 'show';
+
+  try {
+    if (task == 'show') {
+      document.getElementById("leftBtn").classList.remove('hide')
+    } else {
+      document.getElementById("leftBtn").classList.add('hide')
+      document.getElementById("rightBtn").style('margin-right: 0;')
+    }
+  } catch (error) {
+    return
+  }
+}
+
+
+/**
+ * Checks if the element with ID "deleteError" has the "visible" class and if the window width is less than 400 pixels.
+ * Intended to handle UI changes or actions when an error button should be moved on small screens.
+ */
+function moveErrorBtn(){
+  let visibleCheck = document.getElementById("deleteError").classList.contains("visible")
+  if(visibleCheck &amp;&amp; window.innerWidth &lt; 400){
+
+  }
+}
+
+
+window.addEventListener('resize', function () {
+  /**
+   * Determines the image name for the close button based on the current window width.
+   * Uses "closeWhite" if the window width is less than 800 pixels, otherwise uses "close".
+   * @type {string}
+   */
+  let whichImg = this.window.innerWidth &lt; 800 ? "closeWhite" : "close";
+  changeImage("closeFormImg", whichImg);
+  hideCancelBtn();
+}
+);
+
+
+window.addEventListener("DOMContentLoaded", onloadContacts);
+</code></pre>
+        </article>
+    </section>
+
+
+
+
+</div>
+
+<nav>
+    <h2><a href="index.html">Home</a></h2><h3>Global</h3><ul><li><a href="global.html#autoSelect">autoSelect</a></li><li><a href="global.html#chooseTaskDetails">chooseTaskDetails</a></li><li><a href="global.html#clearErrors">clearErrors</a></li><li><a href="global.html#contactDetails">contactDetails</a></li><li><a href="global.html#createGroupDiv">createGroupDiv</a></li><li><a href="global.html#createGroupHeader">createGroupHeader</a></li><li><a href="global.html#createSingleUserNav">createSingleUserNav</a></li><li><a href="global.html#createUserDetails">createUserDetails</a></li><li><a href="global.html#createUserInitials">createUserInitials</a></li><li><a href="global.html#deleteErrorContact">deleteErrorContact</a></li><li><a href="global.html#getContactDetails">getContactDetails</a></li><li><a href="global.html#getContactsFromFirebase">getContactsFromFirebase</a></li><li><a href="global.html#groupUsersByLetter">groupUsersByLetter</a></li><li><a href="global.html#hideCancelBtn">hideCancelBtn</a></li><li><a href="global.html#hideDetails">hideDetails</a></li><li><a href="global.html#loadFromFirebase">loadFromFirebase</a></li><li><a href="global.html#mergeAndSortUsers">mergeAndSortUsers</a></li><li><a href="global.html#moveErrorBtn">moveErrorBtn</a></li><li><a href="global.html#onloadContacts">onloadContacts</a></li><li><a href="global.html#prepareIframeData">prepareIframeData</a></li><li><a href="global.html#renderGroupedContacts">renderGroupedContacts</a></li><li><a href="global.html#responsiveContentRight">responsiveContentRight</a></li><li><a href="global.html#sendDataToIframe">sendDataToIframe</a></li><li><a href="global.html#setupContactsPage">setupContactsPage</a></li></ul>
+</nav>
+
+<br class="clear">
+
+<footer>
+    Documentation generated by <a href="https://github.com/jsdoc/jsdoc">JSDoc 4.0.4</a> on Tue May 27 2025 19:24:25 GMT+0200 (Mitteleuropäische Sommerzeit)
+</footer>
+
+<script> prettyPrint(); </script>
+<script src="scripts/linenumber.js"> </script>
+</body>
+</html>

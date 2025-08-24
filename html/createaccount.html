@@ -1,0 +1,81 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Create Account</title>
+
+    <link rel="shortcut icon" href="../images/joinlogowhite.svg" type="image/x-icon">
+    <link rel="stylesheet" href="../styles/standard.css">
+    <link rel="stylesheet" href="../styles/contacts/createaccount.css">
+    <link rel="stylesheet" href="../styles/responsive/createAccount-resp.css">
+
+</head>
+
+<body onload="initCreateAccount()">
+    <img src="../images/joinlogodark.svg" alt="" class="logo">
+    <main>
+        <div id="mainContent">
+
+            <div id="createAccountDiv" class="createAccountDiv">
+                <a href="../index.html">
+                    <img id="backToLogin" src="../images/arrow-left-line.svg" alt="">
+                </a>
+                <span class="accountHeader">Sign up</span>
+                <div class="loginInputDiv">
+                    <div class="inputDiv">
+                        <input type="text" id="nameInput" placeholder="Name" class="loginInput">
+                        <img src="../images/person.svg" alt="" class="inputImg">
+                    </div>
+                    <span id="nameErrorSpan" class="errorSpan">nameErrorSpan</span>
+                    <div class="inputDiv">
+                        <input type="text" id="emailInput" placeholder="Email" class="loginInput">
+                        <img src="../images/mail.svg" alt="" class="inputImg">
+                    </div>
+                    <span id="emailErrorSpan" class="errorSpan">emailErrorSpan</span>
+                    <div class="inputDiv">
+                        <input type="password" id="passwordInput" placeholder="Password" class="loginInput passwordIcon"
+                            onfocus="changeIconToVisibility(this.id)" onblur="showLockIconCreateAccount(this.id)">
+                        <img id="passwordImg" src="../images/lock.svg" alt="" class="inputImg"
+                            onclick="passwordVisibility(this.id)">
+                    </div>
+                    <span id="passwordErrorSpan" class="errorSpan">passwordErrorSpan</span>
+                    <div class="inputDiv">
+                        <input type="password" id="confirmPasswordInput" placeholder="Confirm Password"
+                            class="loginInput passwordIcon" onfocus="changeIconToVisibility(this.id)">
+                        <img id="confirmPasswordImg" src="../images/lock.svg" alt="" class="inputImg"
+                            onclick="passwordVisibility(this.id)">
+                    </div>
+                    <span id="confirmPasswordErrorSpan" class="errorSpan">confirmPasswordErrorSpan</span>
+                </div>
+                <div id="acceptPrivacy">
+                    <img id="acceptPrivacyPolicy" class="hover" src="../images/checkboxfalseblack.svg" alt=""
+                        onclick="acceptPrivacyPolicy(this.id)">
+                    <span class="marginRight5px">I accept the </span>
+                    <a href="" class="linkPrivacyPolicy">Privacy policy</a>
+                </div>
+                <span id="privacyErrorSpan" class="errorSpan">privacyErrorSpan</span>
+
+                <div class="loginButtonDiv">
+                    <button id="signUpBtn" onclick="createAccount()" class="blueBtn disabled" disabled>Sign up</button>
+                </div>
+                <span id="accountErrorSpan" class="errorSpan textcenter">accountErrorSpan</span>
+            </div>
+        </div>
+        <div id="legal">
+            <a href="./externPrivacyPolicy.html" class="legalText">Privacy Policy</a>
+            <a href="./externLegalNotice.html" class="legalText">Legal Notice</a>
+        </div>
+        <span id="signUpSuccess" class="animation signUpSuccess displayNone">You signed up successfully.</span>
+    </main>
+</body>
+
+<script src="../scripts/index.js"></script>
+<script src="../scripts/errorHandling.js"></script>
+<script src="../scripts/createAccount.js"></script>
+<script src="../scripts/script.js"></script>
+<script src="../scripts/firebase.js"></script>
+
+
+</html>

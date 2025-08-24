@@ -1,0 +1,421 @@
+#addContactBackground {
+    height: 100vh;
+    width: 100%;
+    justify-content: center;
+    align-items: center;
+    position: absolute;
+    z-index: 10;
+    display: flex;
+    background-color: rgba(100, 100, 100, 0.5);
+}
+
+#addContactRight {
+    display: flex;
+    border-radius: 0px 50px 50px 0px;
+    background-color: white;
+    width: calc(100% / 3 * 2);
+    justify-content: center;
+    align-items: center;
+}
+
+#addContactLeft {
+    background-color: #2A3647;
+    max-width: 400px;
+    display: flex;
+    flex-direction: column;
+    height: 500px;
+    align-items: start;
+    justify-content: center;
+    border-radius: 50px 0px 0px 50px;
+    width: calc(100% / 3);
+    height: 100%;
+}
+
+#addContactDivMiddle {
+    margin-left: 30px;
+    margin-bottom: 40px;
+    color: white;
+}
+
+#addContactDivMiddle img {
+    height: 75px;
+    margin: 0;
+}
+
+#addContactDivMiddle h1 {
+    margin: 20px 0px;
+    font-size: 48px;
+    color: white
+}
+
+#addContactDivMiddle h4 {
+    margin: 0;
+    font-weight: normal;
+    color: white
+}
+
+#addContactDivMiddle figure {
+    background-color: #29ABE2;
+    height: 2px;
+    width: 100px;
+    margin: 20px 0px;
+    border-radius: 1rem;
+}
+
+#addContactRightDiv {
+    display: flex;
+    align-items: center;
+    height: 100%;
+    width: 100%;
+}
+
+#addContactRightImg2 {
+    background-color: #D1D1D1;
+    height: 100px;
+    margin: 0px calc(min(50px, 5%));
+    border-radius: 100%;
+    padding: 10px;
+    border: solid 4px white;
+    box-shadow: 0px 0px 5px rgba(0, 0, 0, 0.1);
+}
+
+.grayBackground {
+    background-color: #D1D1D1;
+}
+
+#addContactRightInitialsDiv {
+    height: 100px;
+    width: 100px;
+    margin: 0px calc(min(50px, 5%));
+    border-radius: 100%;
+    padding: 10px;
+    border: solid 4px white;
+    box-shadow: 0px 0px 5px rgba(0, 0, 0, 0.1);
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+
+#addContactRightInitials {
+    font-size: 36px;
+    color: white;
+}
+
+#addContactRightInputs {
+    height: fit-content;
+    width: 70%;
+    min-width: 200px;
+    max-width: 600px;
+    display: flex;
+    justify-content: center;
+}
+
+#addContactFrame {
+    display: flex;
+    max-width: 1200px;
+    height: 500px;
+    position: absolute;
+    z-index: 10;
+    width: 90%;
+}
+
+.flexColumn {
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    width: 100%;
+}
+
+.flexRow {
+    display: flex;
+    flex-direction: row;
+    justify-content: center;
+}
+
+.inputDiv {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    width: fit-content;
+}
+
+.inputImg {
+    position: relative;
+    right: 45px;
+    margin: 0px;
+    padding: 0px;
+    cursor: pointer;
+}
+
+.flex {
+    display: flex;
+}
+
+.marginTop10 {
+    margin-top: 10px;
+}
+
+.marginLeft10 {
+    margin-left: 10px;
+}
+
+
+
+.whiteBtn {
+    background-color: white;
+    color: black;
+    border: solid 1px var(--primary-color);
+    margin-left: 15px;
+}
+
+.whiteBtn:hover {
+    box-shadow: 00px 3px 10px rgba(0, 0, 0, 0.25);
+    border-color: var(--text-underline-color);
+    color: var(--text-underline-color);
+    transition: all 0.1s ease-in-out;
+}
+
+.blueBtn {
+    background-color: var(--primary-color);
+    color: white;
+    font-size: 21px;
+    font-weight: bold;
+    border: none;
+    border-radius: 10px;
+    height: 48px;
+    width: fit-content;
+    padding: 0px 20px;
+    cursor: pointer;
+}
+
+.blueBtn:hover {
+    background-color: var(--text-underline-color);
+    box-shadow: 00px 3px 10px rgba(0, 0, 0, 0.25);
+    transition: all 0.1s ease-in-out;
+}
+
+.blueBtn:disabled,
+.blueBtn:disabled:hover {
+    background-color: gray;
+    box-shadow: 00px 0px 00px rgba(0, 0, 0, 0.25);
+    cursor: auto;
+}
+
+.contactBtn {
+    font-size: 21px;
+    font-weight: normal;
+    border-radius: 10px;
+    width: fit-content;
+    cursor: pointer;
+    height: 48px;
+    display: flex;
+    align-items: center;
+    margin-right: 15px;
+}
+
+#addContactBtn {
+    display: flex;
+    align-items: center;
+    background-color: var(--primary-color);
+    height: fit-content;
+    color: white;
+    font-size: 16px;
+    font-weight: bold;
+    margin: 20px;
+    width: 300px;
+    justify-content: center;
+    border-radius: 10px;
+    cursor: pointer;
+    transition: background-color 0.3s ease-in-out;
+}
+
+#addContactBtn img {
+    padding-left: 20px;
+}
+
+#addContactBtn:hover {
+    background-color: var(--hover-color);
+}
+
+#addContactBtn p {
+    margin: 15px 10px;
+}
+
+.addContactBtnDiv {
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    width: 100%;
+    gap: 15px;
+    flex-direction: row;
+}
+
+.widthFitContent {
+    width: fit-content;
+}
+
+#addContactRightInitialsDiv2 {
+    background-color: #D1D1D1;
+    height: 100px;
+    width: 100px;
+    margin: 0px calc(min(50px, 5%));
+    border-radius: 100%;
+    padding: 10px;
+    border: solid 4px white;
+    box-shadow: 0px 0px 5px rgba(0, 0, 0, 0.1);
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+
+#manipulateContactBackground {
+    position: absolute;
+    width: 100%;
+    height: 100vh;
+    background-color: rgba(100, 100, 100, 0.0);
+    z-index: 1000;
+}
+
+.showManipualteFormBackground {
+    visibility: visible;
+    animation: fadeBackground 250ms ease forwards;
+}
+
+.showManipualteFormFrame {
+    visibility: visible;
+    animation: slideInFromRight 250ms ease forwards;
+}
+
+.showManipualteLinks {
+    visibility: visible;
+    animation: slideToRightBorder 250ms ease forwards;
+}
+
+.closeFormImg {
+    padding: 5px 5px;
+    position: absolute;
+    right: 25px;
+    top: calc(50% - 225px);
+}
+
+.closeFormImg:hover {
+    background-color: #EEEEEE;
+    cursor: pointer;
+    border-radius: 50%;
+}
+
+
+.manipulateContactLinkContainer {
+    display: flex;
+    align-items: center;
+    height: 90px;
+    width: calc(100vw - 200px);
+    position: absolute;
+}
+
+#manipulateLink {
+    width: 20px;
+    height: 20px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    border: 3px solid #2A3647;
+    border-radius: 100%;
+    padding: 10px;
+    text-decoration: none;
+    color: #29ABE2;
+    font-weight: bold;
+    margin: 16px;
+    transition: background-color 0.3s ease-in-out;
+    position: fixed !important;
+    right: 0 !important;
+    z-index: 99;
+}
+
+#manipulateLink:hover {
+    background-color: #E2E6EC;
+    cursor: pointer;
+}
+
+.manipulateOptions {
+    display: flex;
+    flex-direction: column;
+    align-items: start;
+    position: fixed;
+    right: 20px;
+    bottom: 100px;
+    background-color: white;
+    padding: 15px 5px;
+    border-radius: 20px 20px 0px 20px;
+    box-shadow: 0px 0px 5px rgba(0, 0, 0, 0.1);
+    z-index: 401;
+}
+
+.manipulateLinks {
+    text-decoration: none;
+    color: black;
+    padding: 10px 20px;
+    margin: 0;
+    cursor: pointer;
+}
+
+.manipulateLinks:hover {
+    color: var(--text-underline-color);
+}
+
+.showManipualteLinks {
+    visibility: visible;
+    animation: slideToRightBorder 250ms ease forwards;
+}
+
+.manipulateSingleTaskDiv {
+    cursor: pointer;
+    display: flex;
+    flex-direction: row;
+    justify-content: start;
+    padding: 10px;
+    width: calc(100% - 30px);
+    margin: 0px 5px;
+    align-items: center;
+}
+
+.manipulateSingleTaskDiv:hover {
+    background-color: #EEEEEE;
+    border-radius: 10px;
+}
+
+#manipulateOptionsFrame {
+    background-color: transparent;
+    height: 100vh;
+    width: 100%;
+    z-index: 200;
+    position: absolute;
+    top: 0px;
+    left: 0px;
+    z-index: 200;
+}
+
+#editErrorSpanResponsive {
+    position: absolute;
+    right: 0px;
+    bottom: 220px;
+    width: 125px;
+    margin-right: 20px;
+    height: auto;
+}
+
+@keyframes slideToRightBorder {
+    from {
+        right: -200px;
+        /* top: 50%; */
+        /* transform: translate(0%, -50%) */
+    }
+
+    to {
+        right: 20px;
+        /* top: 50%; */
+        /* transform: translate(-50%, -50%) */
+    }
+}

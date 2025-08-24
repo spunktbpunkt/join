@@ -1,0 +1,42 @@
+@media (max-width: 1000px) {
+
+  .header-container {
+    padding-left: 50px;
+  }
+}
+
+@media (max-width: 800px) {
+  .legal-main {
+    left: 0;
+    padding: 10px 16px 0px 16px;
+  }
+
+  main {
+    margin-top: 80px;
+    margin-left: 0;
+    height: calc(100vh - 160px);
+  }
+
+}
+
+@media (max-width: 600px) {
+  .footer-container-right {
+    width: unset;
+  }
+}
+
+@media (max-width: 380px) {
+  .legal-main h1 {
+    font-size: 40px;
+  }
+
+  .footer-container-right {
+    padding-right: 10px;
+  }
+}
+
+@media (max-width: 350px) {
+  footer a {
+    width: 100px !important;
+  }
+}

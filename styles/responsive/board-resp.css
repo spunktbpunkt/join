@@ -1,0 +1,156 @@
+@media (max-width: 1164px) {
+  .task-assignee {
+    width: 28px;
+    height: 28px;
+  }
+}
+
+@media (max-width: 956px) {
+  #mainContent {
+    gap: 20px;
+    max-height: calc(100vh - 120px);
+  }
+
+  #boardContent {
+    flex-direction: column;
+  }
+
+  .board-column > .column-header {
+    display: flex;
+  }
+
+  .task-list {
+    display: flex;
+    overflow-x: auto;
+    overflow-y: auto;
+  }
+
+  .task-list .column-header {
+    display: none;
+  }
+
+  .column-header span {
+    font-size: 27px;
+  }
+
+  .task {
+    margin-right: 16px;
+    user-select: none;
+    max-height: 250px;
+    min-width: 200px;
+    max-width: 200px;
+  }
+
+  .task-header h1 {
+    font-size: 40px;
+    padding-bottom: 20px;
+  }
+
+  #searchInput {
+    display: flex !important;
+  }
+
+  #searchInput #taskSearch {
+    width: 100%;
+    font-size: 20px;
+  }
+
+  .searchInput-resp #taskSearch::placeholder {
+    font-size: 20px;
+  }
+
+  #addTaskBtn {
+    padding: 6px;
+    height: unset;
+    transition: none;
+  }
+
+  #addTaskBtn span {
+    display: none;
+  }
+
+  .darkblueButton img {
+    padding: 0;
+  }
+
+  .task-card-overlay {
+    gap: 0;
+    padding: 30px;
+    max-height: 90%;
+    justify-content: space-between;
+    overflow: auto;
+    scrollbar-width: none;
+  }
+
+  .add-task-card {
+    padding: 20px;
+    max-height: 90%;
+  }
+
+  .task-content {
+    gap: 16px;
+  }
+
+  .task-actions {
+    margin-top: 0;
+  }
+
+  .assignee-item {
+    padding: 0;
+  }
+
+  .task-assignee {
+    width: 35px;
+    height: 35px;
+  }
+
+  .subtask-checkbox-container {
+    margin-top: 0;
+  }
+
+  .subtask-checkbox-container p {
+    margin: 8px 0;
+  }
+
+  .subtask-list {
+    margin: 0;
+  }
+
+  .edit-mode {
+    height: 90% !important;
+    max-height: 900px;
+  }
+
+  .form-actions-edit button {
+    font-size: 16px;
+  }
+
+  .noTasks {
+    width: 100%;
+    height: 48px;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+  }
+
+  .task-category button {
+    display: flex;
+  }
+}
+
+
+@media (max-width: 480px) {
+  #mainContent {
+    padding: 60px 0;
+    margin: 0 20px;
+  }
+
+  .task-card-overlay {
+    transform: scale(0.9);
+    transform-origin: top;
+  }
+
+  .task-list {
+    scrollbar-width: none;
+  }
+}

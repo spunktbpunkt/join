@@ -1,0 +1,97 @@
+body {
+  overflow: hidden;
+}
+
+main::-webkit-scrollbar {
+  width: 10px;
+}
+
+main::-webkit-scrollbar-track {
+  background: transparent;
+}
+
+main::-webkit-scrollbar-thumb {
+  background: #888;
+  border-radius: 10px;
+}
+
+main::-webkit-scrollbar-thumb:hover {
+  background: #555;
+}
+
+main {
+  display: flex;
+  align-items: flex-end;
+  max-width: 1720px;
+  position: relative;
+  scroll-behavior: smooth;
+  height: calc(100vh - 110px);
+  overflow-y: auto;
+  margin-top: 90px;
+  margin-right: 4px;
+}
+
+.legal-main {
+  padding: 30px 80px;
+  gap: 40px;
+  display: flex;
+  flex-direction: column;
+  position: absolute;
+}
+
+.legal-main h1 {
+  margin: 0;
+  font-size: 48px;
+}
+
+.pp-container {
+  min-height: 309px;
+  cursor: context-menu;
+  word-break: break-word;
+  max-width: 1640px;
+}
+
+aside {
+  position: fixed;
+  bottom: 0;
+  z-index: 3;
+}
+
+.d-none {
+  display: none;
+}
+
+.pp-container-heading {
+  margin-top: 0px;
+}
+
+.ln-container-heading {
+  margin-top: 0px;
+}
+
+footer {
+  justify-content: space-between !important;
+}
+
+footer a {
+  width: 120px !important;
+}
+
+.footer-container-right {
+  display: flex;
+  justify-content: space-around;
+  width: 50%;
+  padding-right: 30px;
+}
+
+.header-container {
+  padding-left: 100px;
+}
+
+.header-container img {
+  display: none;
+}
+
+.userLinkOptions {
+  position: sticky !important;
+}

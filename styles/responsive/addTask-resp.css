@@ -1,0 +1,122 @@
+@media (max-width: 1000px) {
+  .header-container {
+    padding-left: 50px;
+  }
+}
+
+@media (max-width: 800px) {
+  #main {
+    padding: 40px 40px 100px 40px !important;
+  }
+
+  .header-container {
+    padding-left: 0px;
+  }
+}
+
+@media (max-width: 800px) {
+  header {
+    z-index: 5;
+  }
+
+  #main {
+    padding: 0 !important;
+  }
+
+  h1 {
+    font-size: 40px;
+  }
+
+  html {
+    scrollbar-width: none;
+  }
+
+  .main-container {
+    gap: 24px;
+    height: 125vh;
+  }
+
+  .main-container>h1 {
+    height: 110px;
+    top: 80px;
+    position: sticky;
+    display: flex;
+    align-items: center;
+    background: var(--background-color);
+    margin: 0 40px;
+    z-index: 4;
+  }
+
+  #addTask {
+    flex-direction: column;
+    gap: 10px;
+    padding: 0 40px;
+  }
+
+  .create-task-footer {
+    background-color: var(--background-color) !important;
+  }
+
+  .form-actions {
+    gap: 16px;
+    height: 70px;
+    display: flex;
+    align-items: center;
+    margin: 0 40px;
+  }
+
+  .separator {
+    height: 1px;
+    width: 100%;
+    background-color: var(--border-color);
+  }
+
+  .half-width {
+    width: 100%;
+  }
+
+  .required-label {
+    padding-left: 40px;
+    position: static;
+  }
+
+  .create-task-footer {
+    margin-top: 0;
+    position: sticky;
+    bottom: 80px;
+  }
+
+  .custom-date-input img {
+    left: 95%;
+  }
+}
+
+@media (max-width: 500px) {
+
+  .create-task-footer {
+    justify-content: flex-end;
+  }
+
+  .create-task-footer label {
+    bottom: 32px;
+    margin-bottom: 24px;
+  }
+
+  .custom-date-input img {
+    left: 90%;
+  }
+
+  .form-actions {
+    gap: 8px;
+  }
+}
+
+@media (max-width: 400px) {
+  .close-btn-footer {
+    padding: 7px;
+  }
+
+  .create-task-btn {
+    padding: 7px 10px;
+  }
+}

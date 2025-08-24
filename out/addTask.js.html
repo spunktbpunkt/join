@@ -1,0 +1,458 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="utf-8">
+    <title>JSDoc: Source: addTask.js</title>
+
+    <script src="scripts/prettify/prettify.js"> </script>
+    <script src="scripts/prettify/lang-css.js"> </script>
+    <!--[if lt IE 9]>
+      <script src="//html5shiv.googlecode.com/svn/trunk/html5.js"></script>
+    <![endif]-->
+    <link type="text/css" rel="stylesheet" href="styles/prettify-tomorrow.css">
+    <link type="text/css" rel="stylesheet" href="styles/jsdoc-default.css">
+</head>
+
+<body>
+
+<div id="main">
+
+    <h1 class="page-title">Source: addTask.js</h1>
+
+    
+
+
+
+    
+    <section>
+        <article>
+            <pre class="prettyprint source linenums"><code>/**
+ * addTask.js - Enthält alle Logiken und Hilfsfunktionen zur Erstellung eines neuen Tasks.
+ */
+
+let activePriorityButton = null;
+let priorityButtons = [];
+
+/**
+ * Initializes the Add Task page by setting up user links, loading the current HTML, and adding help popups.
+ */
+function initAddTask(){
+  fillUserLinks();
+  getCurrentHTML();
+  addHelpToPopup();
+}
+
+
+/**
+ * Sets up the task form for creating a new task.
+ * @param {string} stage - The stage of the task (e.g., 'todo', 'inProgress').
+ */
+function setupTaskForm(stage) {
+  const taskForm = document.getElementById("taskForm");
+  if (!taskForm) return;
+
+  taskForm.addEventListener("submit", function (e) {
+    e.preventDefault();
+    createTask(stage);
+  });
+}
+
+
+/**
+ * Creates a new task based on the form data.
+ * @param {string} stage - The stage of the task (e.g., 'todo', 'inProgress').
+ */
+async function createTask(stage) {
+  const data = getFormData();
+  if (!validateFormData(data)) return;
+
+  const stageMap = { todo: 0, inProgress: 1, awaitFeedback: 2, done: 3 };
+  data.stage = stageMap[stage] ?? 0;
+  data.taskIndex = Date.now();
+
+  try {
+    await postData("tasks", data);
+    clearForm();
+    closeOverlay(true);
+    window.location.href = "board.html";
+  } catch (err) {
+    console.error("Fehler:", err);
+  }
+}
+
+
+/**
+ * Returns the stage of a task based on its status.
+ * @param {string} status - The status of the task.
+ * @returns {number} The stage of the task.
+ */
+function getStageFromStatus(status) {
+  const map = { todo: 0, inProgress: 1, awaitFeedback: 2, done: 3 };
+  return map[status] ?? 0;
+}
+
+
+/**
+ * Retrieves data from the task form.
+ * @returns {Object|null} The form data or null if invalid.
+ */
+function getFormData() {
+  const elements = getFormElements();
+  if (!validateFormElements(elements)) return null;
+  const { title, description, dueDate, category } = getFormValues(elements);
+  const priority = getActivePriority();
+  const assignedTo = getAssignedContacts();
+  const subtasksData = getSubtasksData();
+
+  return {
+    title,
+    description,
+    dueDate,
+    priority,
+    assignedTo,
+    category,
+    subtasks: subtasksData,
+  };
+}
+
+
+/**
+ * Extracts values from the form elements.
+ * @param {Object} elements - The form elements.
+ * @returns {Object} The extracted values.
+ */
+function getFormValues(elements) {
+  const { titleInput, descriptionInput, dateInput, categorySelect } = elements;
+
+  return {
+    title: titleInput.value.trim(),
+    description: descriptionInput.value.trim(),
+    dueDate: dateInput.value.trim(),
+    category: categorySelect.value,
+  };
+}
+
+
+/**
+ * Retrieves the form elements.
+ * @returns {Object} The form elements.
+ */
+function getFormElements() {
+  return {
+    titleInput: document.getElementById("title"),
+    descriptionInput: document.getElementById("description"),
+    dateInput: document.getElementById("due-date"),
+    categorySelect: document.getElementById("categorySelect"),
+    priorityButtons: document.querySelectorAll(".priority-buttons .priority"),
+  };
+}
+
+
+/**
+ * Validates the form elements.
+ * @param {Object} elements - The form elements.
+ * @returns {boolean} True if valid, otherwise false.
+ */
+function validateFormElements(elements) {
+  return (
+    elements.titleInput &amp;&amp;
+    elements.descriptionInput &amp;&amp;
+    elements.dateInput &amp;&amp;
+    elements.categorySelect &amp;&amp;
+    elements.priorityButtons.length > 0
+  );
+}
+
+
+/**
+ * Validates the form data and updates the UI for invalid fields.
+ * @param {Object} data - The form data to validate.
+ * @returns {boolean} True if the data is valid, otherwise false.
+ */
+function validateFormData(data) {
+  const titleInput = document.getElementById("title");
+  const dateInput = document.getElementById("due-date");
+  const categorySelect = document.getElementById("categorySelect");
+
+  const isTitleValid = validateField(titleInput, data.title, "title-error");
+  const isDateValid = validateField(dateInput, data.dueDate, "due-date-error");
+  const isCategoryValid = validateCategory(categorySelect, data.category);
+
+  return isTitleValid &amp;&amp; isDateValid &amp;&amp; isCategoryValid;
+}
+
+/**
+ * Validates a single field and updates its error message.
+ * @param {HTMLElement} field - The input field to validate.
+ * @param {string} value - The value to check.
+ * @param {string} errorId - The ID of the error message element.
+ * @returns {boolean} True if the field is valid, otherwise false.
+ */
+function validateField(field, value, errorId) {
+  const errorElement = document.getElementById(errorId);
+  if (!value) {
+    field.classList.add("fieldIsRequired");
+    errorElement.textContent = "This field is required";
+    return false;
+  }
+  field.classList.remove("fieldIsRequired");
+  errorElement.textContent = "";
+  return true;
+}
+
+/**
+ * Validates the category field and updates its error message.
+ * @param {HTMLElement} categorySelect - The category select element.
+ * @param {string} category - The selected category value.
+ * @returns {boolean} True if the category is valid, otherwise false.
+ */
+function validateCategory(categorySelect, category) {
+  const errorElement = document.getElementById("category-error");
+  if (!category || category === "Select a category") {
+    categorySelect.classList.add("fieldIsRequired");
+    errorElement.textContent = "This field is required";
+    return false;
+  }
+  categorySelect.classList.remove("fieldIsRequired");
+  errorElement.textContent = "";
+  return true;
+}
+
+
+/**
+ * Retrieves the active priority from the buttons.
+ * @returns {string} The active priority.
+ */
+function getActivePriority() {
+  const buttons = document.querySelectorAll(".priority-buttons .priority");
+  for (let btn of buttons) {
+    if (btn.classList.contains("active-btn")) return btn.textContent.trim();
+  }
+  return "";
+}
+
+
+/**
+ * Retrieves the assigned contacts from the checkboxes.
+ * @returns {Array&lt;Object>} The assigned contacts.
+ */
+function getAssignedContacts() {
+  const checkboxes = document.querySelectorAll(".assign-checkbox");
+  const contacts = [];
+
+  for (let i = 0; i &lt; checkboxes.length; i++) {
+    const cb = checkboxes[i];
+    if (cb.checked) {
+      const id = cb.dataset.userId;
+      const name = cb.dataset.userName;
+      const email = cb.dataset.userEmail;
+      const color = cb.dataset.userColor;
+
+      if (!id || !name || !email || !color) {
+        console.warn("Incomplete contact data:", { id, name, email, color });
+        continue;
+      }
+
+      contacts.push({ id, name, email, color });
+    }
+  }
+  return contacts;
+}
+
+
+/**
+ * Retrieves the data of subtasks.
+ * @returns {Array&lt;Object>} The subtask data.
+ */
+function getSubtasksData() {
+  return subtasks
+    .filter(s => s.name?.trim())
+    .map(s => ({ name: s.name, completed: false }));
+}
+
+
+/**
+ * Clears and resets the task form.
+ */
+/**
+ * Clears all input fields and resets the form to its initial state for adding a new task.
+ * This includes clearing text fields, resetting dropdowns, removing active button states,
+ * clearing assigned users and subtasks, and resetting error messages.
+ */
+function clearForm() {
+  document.getElementById("title").value = "";
+  document.getElementById("description").value = "";
+  document.getElementById("due-date").value = "";
+
+  document.querySelectorAll(".priority").forEach((btn) =>
+    btn.classList.remove("active-btn")
+  );
+  document.getElementById("categorySelect").selectedIndex = 0;
+  document.getElementById("assignedChips").innerHTML = "";
+  subtasks.length = 0;
+  document.getElementById("subtask-list").innerHTML = "";
+
+  resetFieldAndError("title", "title-error");
+  resetFieldAndError("due-date", "due-date-error");
+  resetFieldAndError("categorySelect", "category-error");
+
+  updateSubtaskList();
+}
+
+
+/**
+ * Resets the visual error indication and error message for a given input field.
+ *
+ * @param {string} fieldId - The ID of the input field to reset.
+ * @param {string} errorId - The ID of the element displaying the error message.
+ */
+function resetFieldAndError(fieldId, errorId) {
+  const field = document.getElementById(fieldId);
+  if (field) field.classList.remove("fieldIsRequired");
+
+  const errorElement = document.getElementById(errorId);
+  if (errorElement) errorElement.textContent = "";
+}
+
+
+/**
+ * Initializes the priority buttons.
+ * @param {Document|HTMLElement} [scope=document] - The scope in which to search for buttons.
+ */
+function initPriorityButtons(scope = document) {
+  priorityButtons = scope.querySelectorAll(".priority-buttons .priority");
+  activePriorityButton = scope.querySelector(".priority.active-btn");
+  priorityButtons.forEach((btn) => {
+    btn.addEventListener("click", () => setPriority(btn));
+  });
+}
+
+
+/**
+ * Sets the priority based on the selected button.
+ * @param {HTMLElement} button - The selected button.
+ */
+function setPriority(button) {
+  activePriorityButton = button;
+  priorityButtons.forEach((btn) => btn.classList.remove("active-btn"));
+  button.classList.add("active-btn");
+}
+
+
+/**
+ * Sets up the date picker for the task form.
+ */
+function setupDatePicker() {
+  const dateInput = document.getElementById("due-date");
+  if (!dateInput) return;
+  const icon = document.querySelector(".custom-date-input img");
+
+  const today = new Date().toISOString().split('T')[0];
+  dateInput.min = today;
+
+  const year = new Date().getFullYear();
+  dateInput.max = `${year}-12-31`;
+
+  if (icon) {
+    icon.addEventListener("click", () => {
+      if (dateInput.showPicker) dateInput.showPicker();
+      else dateInput.focus();
+    });
+  }
+}
+
+
+/**
+ * Adds event listeners to the form fields.
+ */
+function setupFieldListeners() {
+  ["title", "due-date", "categorySelect"].forEach((id) => {
+    const field = document.getElementById(id);
+    if (!field) return;
+
+    field.addEventListener("input", () => {
+      field.classList.remove("fieldIsRequired");
+      const err = document.getElementById(`${id}-error`);
+      if (err) err.textContent = "";
+    });
+  });
+}
+
+
+/**
+ * Deletes a task based on its ID.
+ * @param {string} taskId - The ID of the task to delete.
+ */
+async function deleteTask(taskId) {
+    await fetch(BASE_URL + `tasks/${taskId}.json`, { method: "DELETE" });
+    closeOverlay();
+    window.location.reload();
+  }
+
+
+/**
+ * Displays the confirmation template for deleting a task.
+ * @param {Event} event - The triggering event.
+ * @param {string} taskId - The ID of the task to delete.
+ */
+function showDeleteTemplate(event, taskId) {
+  event.stopPropagation();
+  const deleteOverlay = document.getElementById("dialogContainer");
+  deleteOverlay.innerHTML = deleteConfirmTemplate(taskId);
+}
+
+
+/**
+ * Closes the confirmation dialog.
+ * @param {Event} event - The triggering event.
+ */
+function closeConfirmDialog(event) {
+  if (event &amp;&amp; event.target.id !== "confirmDialog") return;
+  const deleteOverlay = document.getElementById("dialogContainer");
+  deleteOverlay.innerHTML = "";
+}
+
+
+/**
+ * Confirms the deletion of a task.
+ * @param {string} taskId - The ID of the task to delete.
+ */
+function deleteTaskConfirmed(taskId) {
+  deleteTask(taskId);
+  closeConfirmDialog();
+}
+
+
+/**
+ * Initializes the Add Task page on load.
+ */
+function initAddTaskPage() {
+  initPriorityButtons();
+  setupDatePicker();
+  setupFieldListeners();
+  setupTaskForm('todo');
+  initAssignedDropdown().then(users => updateAssignedChips(users));
+}
+document.addEventListener('DOMContentLoaded', initAddTaskPage);</code></pre>
+        </article>
+    </section>
+
+
+
+
+</div>
+
+<nav>
+    <h2><a href="index.html">Home</a></h2><h3>Global</h3><ul><li><a href="global.html#activePriorityButton">activePriorityButton</a></li><li><a href="global.html#clearForm">clearForm</a></li><li><a href="global.html#closeConfirmDialog">closeConfirmDialog</a></li><li><a href="global.html#createTask">createTask</a></li><li><a href="global.html#deleteTask">deleteTask</a></li><li><a href="global.html#deleteTaskConfirmed">deleteTaskConfirmed</a></li><li><a href="global.html#getActivePriority">getActivePriority</a></li><li><a href="global.html#getAssignedContacts">getAssignedContacts</a></li><li><a href="global.html#getFormData">getFormData</a></li><li><a href="global.html#getFormElements">getFormElements</a></li><li><a href="global.html#getFormValues">getFormValues</a></li><li><a href="global.html#getStageFromStatus">getStageFromStatus</a></li><li><a href="global.html#getSubtasksData">getSubtasksData</a></li><li><a href="global.html#initAddTask">initAddTask</a></li><li><a href="global.html#initAddTaskPage">initAddTaskPage</a></li><li><a href="global.html#initPriorityButtons">initPriorityButtons</a></li><li><a href="global.html#resetFieldAndError">resetFieldAndError</a></li><li><a href="global.html#setPriority">setPriority</a></li><li><a href="global.html#setupDatePicker">setupDatePicker</a></li><li><a href="global.html#setupFieldListeners">setupFieldListeners</a></li><li><a href="global.html#setupTaskForm">setupTaskForm</a></li><li><a href="global.html#showDeleteTemplate">showDeleteTemplate</a></li><li><a href="global.html#validateCategory">validateCategory</a></li><li><a href="global.html#validateField">validateField</a></li><li><a href="global.html#validateFormData">validateFormData</a></li><li><a href="global.html#validateFormElements">validateFormElements</a></li></ul>
+</nav>
+
+<br class="clear">
+
+<footer>
+    Documentation generated by <a href="https://github.com/jsdoc/jsdoc">JSDoc 4.0.4</a> on Wed May 28 2025 14:05:32 GMT+0200 (Mitteleuropäische Sommerzeit)
+</footer>
+
+<script> prettyPrint(); </script>
+<script src="scripts/linenumber.js"> </script>
+</body>
+</html>

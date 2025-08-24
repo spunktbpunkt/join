@@ -1,0 +1,100 @@
+#subtask-list {
+  max-height: 80px;
+  overflow-y: auto;
+}
+
+.subtask-item {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  margin-top: 8px;
+  height: 32px;
+  padding: 2px 10px;
+  transition: all 0.1s ease-in-out;
+}
+
+.subtask-item:hover {
+  border-radius: 10px;
+  box-shadow: 1px 4px 8px rgba(0, 0, 0, 0.1);
+  border-bottom: 2px solid var(--border-color-focus-filled);
+  cursor: pointer;
+}
+
+.subtask-icon {
+  width: 20px;
+  height: 20px;
+  cursor: pointer;
+  margin-left: 8px;
+  transition: transform 0.3s ease-in-out;
+}
+
+.vertical-line-subtask-dark {
+  width: 1px;
+  height: 20px;
+  background-color: #ccc;
+  margin: 0 8px;
+}
+
+.checkCloseContainer {
+  display: flex;
+}
+
+.subtask-icon-check {
+  position: absolute;
+  right: 40px !important;
+  top: 50%;
+  transform: translateY(-50%);
+}
+
+.seperator {
+  position: absolute;
+  right: 25px !important;
+  width: 1px;
+  height: 20px;
+  background-color: #ccc;
+  margin: 0 10px;
+}
+
+.subtask-icons {
+  display: none;
+  transition: transform 0.3s ease-in-out;
+}
+
+.subtask-list {
+  /* height: 20px !important; */
+  transition: all 0.3s ease-in-out;
+}
+
+.subtask-item.editing {
+  background-color: var(--border-color-light);
+  border-radius: 10px;
+  padding: 10px;
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+  border-bottom: 2px solid var(--border-color-focus-filled);
+}
+
+.subtask-item:hover .subtask-icons {
+  display: flex;
+  justify-content: flex-end;
+  gap: 10px;
+}
+
+.edit-input {
+  background-color: transparent;
+  border: none;
+  outline: none;
+  font-size: 16px;
+  padding: 5px 0;
+}
+
+.subtask-icons img:hover {
+  cursor: pointer;
+  background-color: transparent;
+  border-radius: 5px;
+  transform: scale(1.1);
+}
+
+.blue-dot {
+  color: blue;
+  font-weight: bold;
+}

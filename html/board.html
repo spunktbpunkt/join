@@ -1,0 +1,180 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Board</title>
+
+  <link rel="shortcut icon" href="../images/joinlogowhite.svg" type="image/x-icon" />
+  <link rel="stylesheet" href="../styles/standard.css" />
+  <link rel="stylesheet" href="../style.css" />
+  <link rel="stylesheet" href="../styles/fonts.css" />
+  <link rel="stylesheet" href="../styles/board.css" />
+  <link rel="stylesheet" href="../styles/addTask/board-taskcard.css" />
+  <link rel="stylesheet" href="../styles/addTask/taskOverlay.css" />
+  <link rel="stylesheet" href="../styles/responsive/style-resp.css" />
+
+  <link rel="stylesheet" href="../styles/standard.css" />
+  <link rel="stylesheet" href="../style.css" />
+  <link rel="stylesheet" href="../styles/fonts.css" />
+  <link rel="stylesheet" href="../styles/board.css" />
+  <link rel="stylesheet" href="../styles/addTask/board-taskcard.css" />
+  <link rel="stylesheet" href="../styles/addTask/taskOverlay.css" />
+  <link rel="stylesheet" href="../styles/responsive/style-resp.css" />
+  <link rel="stylesheet" href="../styles/responsive/board-resp.css" />
+
+  <link rel="stylesheet" href="../styles/addTask/addTask.css" />
+  <link rel="stylesheet" href="../styles/addTask/addSubtask.css" />
+  <link rel="stylesheet" href="../styles/addTask/dropdownAddTask.css" />
+
+  <!-- <script src="../scripts/containerDebugger.js"></script> -->
+  <!-- <script src="../scripts/userVerification.js"></script>-->
+</head>
+
+<body onload="init()">
+  <header>
+    <div class="header-container">
+      <div class="header-left">
+        <img src="../images/joinlogodark.svg" alt="logo dark" />
+        <span>Kanban Project Management Tool</span>
+      </div>
+      <section class="header-right">
+        <div class="help-icon">
+          <a href="./help.html"><img src="../images/help20x20.svg" alt="help" /></a>
+        </div>
+        <a onclick="showUserLinksOptions()" id="userLink"></a>
+      </section>
+    </div>
+  </header>
+  <aside>
+    <div id="logo">
+      <img src="../images/joinlogowhite.svg" alt="" />
+    </div>
+    <nav id="linkNav">
+      <a href="../html/summary.html">
+        <img src="../images/summarygray.svg" alt="logo" />
+        <span>Summary</span>
+      </a>
+      <a href="../html/addTask.html">
+        <img src="../images/addtaskgray.svg" alt="logo" />
+        <span>Add Task</span>
+      </a>
+      <a href="../html/board.html">
+        <img src="../images/boardgray.svg" alt="logo" />
+        <span>Board</span>
+      </a>
+      <a href="../html/contacts.html">
+        <img src="../images/contactsgray.svg" alt="logo" />
+        <span>Contacts</span>
+      </a>
+    </nav>
+    <div id="legal">
+      <a href="./privacyPolicy.html">Privacy Policy</a>
+      <a href="./legalNotice.html">Legal Notice</a>
+    </div>
+  </aside>
+  <main>
+
+    <div id="userLinkOptions" class="userLinkOptions hide"></div>
+    <section id="mainContent">
+      <section id="boardHeader">
+        <h1>Board</h1>
+        <div>
+          <div id="searchInput">
+            <input id="taskSearch" onclick="initializeTaskSearch()" type="text" placeholder="Find Task" />
+            <button onclick="focusSearchInput()">
+              <img src="../images/search.svg" alt="search" />
+            </button>
+            <div id="searchHint" class="search-hint" style="display: none">
+              Type at least 3 characters to search.
+            </div>
+          </div>
+          <button id="addTaskBtn" class="darkblueButton">
+            <span>Add Task</span>
+            <img src="../images/add.svg" alt="plus" />
+          </button>
+        </div>
+      </section>
+      <div id="searchInput-resp-target"></div>
+
+      <section id="boardContent">
+        <div class="board-column">
+          <div class="column-header">
+            <span>To do</span>
+            <button id="todoBtn" class="add-task" onclick="showAddTaskOverlay('todo')"></button>
+          </div>
+          <div id="toDo" class="task-list"></div>
+        </div>
+
+        <div class="board-column">
+          <div class="column-header">
+            <span>In Progress</span>
+            <button id="inProgressBtn" class="add-task" onclick="showAddTaskOverlay('inProgress')"></button>
+          </div>
+          <div id="inProgress" class="task-list"></div>
+        </div>
+
+        <div class="board-column">
+          <div class="column-header">
+            <span>Await Feedback</span>
+            <button id="awaitFeedbackBtn" class="add-task" onclick="showAddTaskOverlay('awaitFeedback')"></button>
+          </div>
+          <div id="awaitFeedback" class="task-list"></div>
+        </div>
+
+        <div class="board-column">
+          <div class="column-header">
+            <span>Done</span>
+            <button id="doneBtn" class="add-task" onclick="showAddTaskOverlay('done')"></button>
+          </div>
+          <div id="done" class="task-list"></div>
+        </div>
+      </section>
+    </section>
+  </main>
+  <footer>
+    <a href="./summary.html">
+      <img src="../images/summarygray.svg" alt="logo" />
+      <span>Summary</span>
+    </a>
+    <a href="./addTask.html">
+      <img src="../images/addtaskgray.svg" alt="logo" />
+      <span>Add Task</span>
+    </a>
+    <a href="./board.html" class="active">
+      <img src="../images/boardwhite.svg" alt="logo" />
+      <span>Board</span>
+    </a>
+    <a href="./contacts.html">
+      <img src="../images/contactsgray.svg" alt="logo" />
+      <span>Contacts</span>
+    </a>
+  </footer>
+
+  <div id="taskOverlay" class="d-none task-overlay" data-task-id="${task.id}" onclick="handleOverlayClick(event)"></div>
+  <div id="dialogContainer"></div>
+
+  <script src="../scripts/firebase.js"></script>
+  <script src="../scripts/userLink.js"></script>
+  <script src="../scripts/templates/assigneeTemp.js"></script>
+  <script src="../scripts/templates/subtaskTemp.js"></script>
+  <script src="../scripts/templates/taskCardTemp.js"></script>
+  <script src="../scripts/templates/taskOverlayTemp.js"></script>
+  <script src="../scripts/templates/addTaskTemp.js"></script>
+  <script src="../scripts/templates/editTaskTemp.js"></script>
+
+  <script src="../scripts/tasks/addTaskDropDown.js"></script>
+
+  <script src="../scripts/tasks/addTask.js"></script>
+  <script src="../scripts/tasks/subtask.js"></script>
+  <script src="../scripts/board/searchTask.js"></script>
+
+  <script src="../scripts/tasks/taskOverlay.js"></script>
+
+  <script src="../scripts/board/board.js"></script>
+  <script src="../scripts/board/dragAndDrop.js"></script>
+  <script src="../scripts/script.js"></script>
+</body>
+
+</html>
